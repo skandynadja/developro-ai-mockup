@@ -56,8 +56,30 @@
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: 120px; /* Space for floating dock */
+            padding-top: 100px; /* Space for floating dock at the top */
+            padding-bottom: 20px;
             position: relative;
+        }
+
+        /* Custom Scrollbar with Brand Identity */
+        ::-webkit-scrollbar {
+            width: 14px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(10, 6, 20, 0.85);
+            border-left: 1px solid var(--border-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--lime-color);
+            border: 3px solid rgba(10, 6, 20, 0.85);
+            border-radius: 8px;
+            /* DP logo for DeveloPRO in the scrollbar thumb */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="40" viewBox="0 0 14 40"><text x="50%" y="50%" fill="%23040208" font-size="10" font-weight="900" font-family="Outfit, sans-serif" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 7 20)">DP</text></svg>');
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #e4ff4d;
         }
 
         /* Interactive Node Web Background Canvas */
@@ -585,7 +607,7 @@
         /* Floating Navigation Dock (Messenger Style Console) */
         .floating-dock {
             position: fixed;
-            bottom: 25px;
+            top: 25px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(10, 6, 20, 0.85);
@@ -2096,16 +2118,16 @@
                     playTick(1300, 0.04);
                     document.querySelectorAll('.material-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    playMedia(m);
+                    playMedia(m, true);
                 };
                 
                 linksContainer.appendChild(btn);
             });
 
-            // Autoplay first video
+            // Show first video without autoplay
             const firstMedia = cand.materials[0];
             if (firstMedia.type === 'youtube' || firstMedia.type === 'vimeo' || firstMedia.type === 'video') {
-                playMedia(firstMedia);
+                playMedia(firstMedia, false);
             }
         }
 
@@ -2127,24 +2149,27 @@
         player.classList.remove('active');
     }
 
-    function playMedia(media) {
+    function playMedia(media, isAutoplay = true) {
         const player = document.getElementById('video-player-container');
         player.innerHTML = '';
         
+        let autoParam = isAutoplay ? '1' : '0';
+        let autoAttr = isAutoplay ? 'autoplay' : '';
+
         if (media.type === 'youtube') {
             player.classList.add('active');
             player.innerHTML = `
-                <iframe src="${media.embedUrl}?autoplay=1&mute=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe src="${media.embedUrl}?autoplay=${autoParam}&mute=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             `;
         } else if (media.type === 'vimeo') {
             player.classList.add('active');
             player.innerHTML = `
-                <iframe src="${media.embedUrl}?autoplay=1&muted=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                <iframe src="${media.embedUrl}?autoplay=${autoParam}&muted=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
             `;
         } else if (media.type === 'video') {
             player.classList.add('active');
             player.innerHTML = `
-                <video src="${media.url}" controls autoplay></video>
+                <video src="${media.url}" controls ${autoAttr}></video>
             `;
         }
     }
