@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeveloPRO Casting Dashboard — HUD v3.0 (ULTRA FANCY)</title>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #040208;
+            --panel-bg: rgba(10, 6, 20, 0.85);
+            --card-bg: rgba(14, 8, 30, 0.8);
+            --border-color: rgba(120, 110, 195, 0.3);
+            --border-glow: rgba(215, 255, 0, 0.25);
+            
+            /* DeveloPRO Brand Colors */
+            --accent-color: #d7ff00; /* Lime */
+            --purple-color: #786ec3; /* Violet */
+            --lime-color: #d7ff00;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success-color: #10b981;
+            
+            --neon-glow: 0 0 15px rgba(215, 255, 0, 0.4);
+            --purple-glow: 0 0 15px rgba(120, 110, 195, 0.3);
+            --transition-speed: 0.35s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* Disable normal cursor on desktop to support custom cursor */
+            cursor: none !important;
+        }
+
+        /* Hide custom cursor on touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            * {
+                cursor: auto !important;
+            }
+            .custom-cursor-ring, .custom-cursor-dot {
+                display: none !important;
+            }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 120px; /* Space for floating dock */
+            position: relative;
+        }
+
+        /* Interactive Node Web Background Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Ambient scanlines grid background */
+        .hud-grid-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(215, 255, 0, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(215, 255, 0, 0.015) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Cyberpunk Custom Cursor */
+        .custom-cursor-ring {
+            width: 32px;
+            height: 32px;
+            border: 1.5px solid var(--purple-color);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s;
+            box-shadow: var(--purple-glow);
+        }
+
+        .custom-cursor-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--lime-color);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10001;
+            transform: translate(-50%, -50%);
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Custom cursor hover state */
+        .custom-cursor-hover {
+            width: 48px;
+            height: 48px;
+            border-color: var(--lime-color);
+            background: rgba(215, 255, 0, 0.05);
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Boot System Intro Loader */
+        .boot-loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #040208;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--lime-color);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+        }
+
+        .boot-console {
+            width: 450px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px rgba(215, 255, 0, 0.7);
+        }
+
+        .boot-bar-container {
+            width: 450px;
+            height: 4px;
+            background: rgba(120, 110, 195, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .boot-progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--lime-color);
+            box-shadow: var(--neon-glow);
+            transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Header styling */
+        header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 160px;
+            height: 2px;
+            background: var(--lime-color);
+            box-shadow: var(--neon-glow);
+        }
+
+        .header-title h1 {
+            font-size: 3rem;
+            font-style: italic;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+        
+        .header-title h1 span {
+            color: var(--lime-color);
+            text-shadow: var(--neon-glow);
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .header-status {
+            text-align: right;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            color: var(--lime-color);
+            text-shadow: var(--neon-glow);
+            border: 1px solid var(--lime-color);
+            padding: 6px 14px;
+            border-radius: 4px;
+            background: rgba(215, 255, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: inset 0 0 10px rgba(215, 255, 0, 0.1);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--lime-color);
+            border-radius: 50%;
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; box-shadow: 0 0 0 0 rgba(215, 255, 0, 0.7); }
+            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 0 8px rgba(215, 255, 0, 0); }
+            100% { transform: scale(0.9); opacity: 0.6; box-shadow: 0 0 0 0 rgba(215, 255, 0, 0); }
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            transition: border-color var(--transition-speed), transform var(--transition-speed);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: var(--purple-color);
+        }
+
+        .stat-card:hover {
+            border-color: var(--lime-color);
+            transform: translateY(-2px);
+            box-shadow: inset 0 0 15px rgba(215, 255, 0, 0.05);
+        }
+        
+        .stat-card:hover::before {
+            background: var(--lime-color);
+            box-shadow: 0 0 8px var(--lime-color);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.1;
+            margin-bottom: 2px;
+        }
+        
+        .stat-card:hover .stat-number {
+            color: var(--lime-color);
+            text-shadow: var(--neon-glow);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        /* Search Section inside header area */
+        .search-container {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: rgba(18, 12, 34, 0.7);
+            border: 1px solid var(--border-color);
+            padding: 16px 20px 16px 50px;
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all var(--transition-speed);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--lime-color);
+            box-shadow: var(--neon-glow), inset 0 0 10px rgba(215, 255, 0, 0.05);
+            background: rgba(18, 12, 34, 0.85);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            fill: var(--text-muted);
+            transition: fill var(--transition-speed);
+        }
+
+        .search-box input:focus + svg {
+            fill: var(--lime-color);
+        }
+
+        /* Candidates Grid */
+        .candidates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 25px;
+            margin-top: 10px;
+        }
+
+        /* Candidate Card (Character Selector with 3D Tilt support) */
+        .candidate-card-wrapper {
+            perspective: 1000px;
+            height: 100%;
+        }
+
+        .candidate-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .candidate-card-wrapper:hover .candidate-card {
+            border-color: var(--lime-color);
+            box-shadow: var(--neon-glow), 0 15px 35px rgba(0,0,0,0.6);
+        }
+        
+        /* Interactive grid scanline on hover */
+        .candidate-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--lime-color), transparent);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .candidate-card-wrapper:hover .candidate-card::after {
+            opacity: 0.7;
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .card-image-area {
+            position: relative;
+            height: 380px; /* Force consistent aspect ratio for the photo */
+            overflow: hidden;
+            background: #0d081a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-color);
+            transform: translateZ(20px);
+        }
+
+        .card-image-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Do not crop the actors' faces/photos */
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .candidate-card-wrapper:hover .card-image-area img {
+            transform: scale(1.04);
+        }
+
+        .badge-location {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(8, 4, 18, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--text-primary);
+            border: 1px solid var(--purple-color);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: 'Outfit', sans-serif;
+            box-shadow: var(--purple-glow);
+            z-index: 10;
+        }
+        
+        .candidate-card-wrapper:hover .badge-location {
+            border-color: var(--lime-color);
+            box-shadow: var(--neon-glow);
+            color: var(--lime-color);
+        }
+
+        .card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            transform: translateZ(10px);
+        }
+
+        .candidate-name {
+            font-size: 1.45rem;
+            font-weight: 850;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+            transition: color var(--transition-speed);
+        }
+
+        .candidate-card-wrapper:hover .candidate-name {
+            color: var(--lime-color);
+        }
+
+        .candidate-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .separator {
+            width: 4px;
+            height: 4px;
+            background-color: var(--border-color);
+            border-radius: 50%;
+        }
+
+        .candidate-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            background: rgba(120, 110, 195, 0.1);
+            color: var(--purple-color);
+            border: 1px solid rgba(120, 110, 195, 0.3);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-special {
+            background: rgba(215, 255, 0, 0.05);
+            color: var(--lime-color);
+            border: 1px solid rgba(215, 255, 0, 0.3);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            margin-top: auto;
+        }
+
+        .rate-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rate-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .rate-value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 2px;
+        }
+
+        .action-btn {
+            background: var(--lime-color);
+            color: #0c081d;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: none; /* Must be none */
+            transition: all var(--transition-speed);
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(215, 255, 0, 0.5);
+            background: #ffffff;
+        }
+
+        /* Floating Navigation Dock (Messenger Style Console) */
+        .floating-dock {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 6, 20, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), var(--purple-glow);
+            max-width: 95vw;
+            overflow-x: auto;
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+        }
+        
+        .floating-dock::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
+        }
+
+        .dock-section {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-right: 1px solid rgba(120, 110, 195, 0.2);
+            padding-right: 15px;
+        }
+        
+        .dock-section:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .dock-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            white-space: nowrap;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: none;
+            transition: all var(--transition-speed);
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-primary);
+            background: rgba(120, 110, 195, 0.15);
+        }
+
+        .filter-btn.active {
+            background: var(--purple-color);
+            color: #ffffff;
+            border-color: rgba(120, 110, 195, 0.5);
+            box-shadow: var(--purple-glow);
+        }
+
+        /* Sound Control Indicator in Dock */
+        .sound-toggle {
+            background: rgba(120, 110, 195, 0.15);
+            border: 1px solid rgba(120, 110, 195, 0.3);
+            color: var(--lime-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none;
+            transition: all var(--transition-speed);
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .sound-toggle:hover {
+            background: var(--lime-color);
+            color: #0c081d;
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Slid-out Details Panel (Cyberpunk Terminal) */
+        .panel-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(4, 2, 8, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        
+        .panel-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .details-panel {
+            position: fixed;
+            top: 0;
+            right: -650px;
+            width: 650px;
+            height: 100vh;
+            background: #07040d;
+            border-left: 2px solid var(--purple-color);
+            z-index: 1999;
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.9), var(--purple-glow);
+            transition: right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            .details-panel {
+                width: 100vw;
+                right: -100vw;
+            }
+        }
+
+        .details-panel.active {
+            right: 0;
+            border-left-color: var(--lime-color);
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.95), var(--neon-glow);
+        }
+
+        /* CRT Screen Lines overlay */
+        .details-panel::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 999;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+            opacity: 0.12;
+        }
+
+        .panel-header {
+            padding: 30px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .panel-close-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none;
+            transition: all var(--transition-speed);
+        }
+
+        .panel-close-btn:hover {
+            background: var(--lime-color);
+            color: #0c081d;
+            border-color: var(--lime-color);
+            box-shadow: var(--neon-glow);
+        }
+
+        .panel-title-area h2 {
+            font-size: 2.2rem;
+            color: #ffffff;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+        
+        .panel-title-area h2 span {
+            color: var(--lime-color);
+        }
+
+        .panel-meta {
+            display: flex;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .panel-body {
+            padding: 30px;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Info Layout: Grid with radar chart side-by-side */
+        .info-layout-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 500px) {
+            .info-layout-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Skill Profiler Canvas Radar Chart */
+        .radar-chart-container {
+            background: rgba(18, 12, 34, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .radar-chart-container canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Gallery in panel */
+        .panel-gallery-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .panel-main-image-wrapper {
+            height: 380px;
+            background: #0c081a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .panel-main-image-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .panel-gallery-thumbnails {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .thumb-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            cursor: none;
+            opacity: 0.6;
+            transition: all var(--transition-speed);
+            background: #0d081a;
+        }
+
+        .thumb-img:hover {
+            opacity: 0.9;
+        }
+
+        .thumb-img.active {
+            opacity: 1;
+            border-color: var(--lime-color);
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Panel stats table */
+        .panel-section-title {
+            font-size: 0.8rem;
+            color: var(--lime-color);
+            text-shadow: var(--neon-glow);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            border-left: 3px solid var(--lime-color);
+            padding-left: 8px;
+        }
+
+        .details-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: rgba(18, 12, 34, 0.4);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            height: 100%;
+            justify-content: space-around;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .detail-val {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 3px;
+            word-break: break-all;
+        }
+
+        .experience-box {
+            background: rgba(18, 12, 34, 0.4);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Interactive terminal Tabs for materials */
+        .materials-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            gap: 5px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: none;
+            position: relative;
+            transition: color var(--transition-speed);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--lime-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0; width: 100%; height: 2px;
+            background: var(--lime-color);
+            box-shadow: var(--neon-glow);
+        }
+
+        .materials-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .material-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .material-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: none;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .material-btn:hover {
+            border-color: var(--lime-color);
+            color: var(--text-primary);
+            background: rgba(215, 255, 0, 0.05);
+        }
+
+        .material-btn.active {
+            background: rgba(215, 255, 0, 0.1);
+            color: var(--lime-color);
+            border-color: var(--lime-color);
+            box-shadow: var(--neon-glow);
+        }
+
+        .player-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #000;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.4s ease;
+            display: none;
+        }
+
+        .player-container.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .player-container iframe,
+        .player-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            background: var(--panel-bg);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .no-photo-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-align: center;
+            height: 100%;
+            width: 100%;
+            padding: 30px;
+        }
+        
+        .no-photo-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(120, 110, 195, 0.15);
+            border: 1px dashed var(--purple-color);
+            color: var(--purple-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Custom HUD Cursors -->
+<div class="custom-cursor-ring" id="custom-cursor-ring"></div>
+<div class="custom-cursor-dot" id="custom-cursor-dot"></div>
+
+<!-- Boot System Intro Loader -->
+<div class="boot-loader" id="boot-loader">
+    <div class="boot-console" id="boot-console"></div>
+    <div class="boot-bar-container">
+        <div class="boot-progress-bar" id="boot-progress-bar"></div>
+    </div>
+</div>
+
+<!-- Interactive Network background canvas -->
+<canvas id="bg-canvas"></canvas>
+<div class="hud-grid-overlay"></div>
+
+<div class="container">
+    <header>
+        <div class="header-title">
+            <h1>DeveloPRO <span>Casting Call</span></h1>
+            <p>Automated Candidate Detector & Presentation HUD</p>
+        </div>
+        <div class="header-status">
+            <div class="status-dot"></div>
+            <span>PORT DETECTION ACTIVE</span>
+        </div>
+    </header>
+
+    <!-- Stats Panel -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-number" id="stat-total">0</div>
+            <div class="stat-label">System Registry</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="stat-experts">0</div>
+            <div class="stat-label">Real Estate Experts</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="stat-warszawa">0</div>
+            <div class="stat-label">Warsaw Node</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="stat-lodz">0</div>
+            <div class="stat-label">Lodz Node</div>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Wyszukaj kandydatów po nazwisku, tagu, doświadczeniu...">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Candidates Grid -->
+    <div class="candidates-grid" id="candidates-grid">
+        <!-- Rendered dynamically by JS -->
+    </div>
+</div>
+
+<!-- Floating Navigation Dock (Messenger Style Console) -->
+<div class="floating-dock">
+    <div class="dock-section">
+        <span class="dock-label">Lokacja</span>
+        <div class="filter-buttons" id="filter-location">
+            <button class="filter-btn active" data-filter="all">Wszystkie</button>
+            <button class="filter-btn" data-filter="Warszawa">Warszawa</button>
+            <button class="filter-btn" data-filter="Łódź">Łódź</button>
+        </div>
+    </div>
+    
+    <div class="dock-section">
+        <span class="dock-label">Płeć</span>
+        <div class="filter-buttons" id="filter-gender">
+            <button class="filter-btn active" data-filter="all">Wszystkie</button>
+            <button class="filter-btn" data-filter="Kobieta">Kobiety</button>
+            <button class="filter-btn" data-filter="Mężczyzna">Mężczyźni</button>
+        </div>
+    </div>
+
+    <div class="dock-section">
+        <span class="dock-label">Budżet</span>
+        <div class="filter-buttons" id="filter-rate">
+            <button class="filter-btn active" data-filter="all">Dowolny</button>
+            <button class="filter-btn" data-filter="specified">Stawka</button>
+            <button class="filter-btn" data-filter="to-negotiate">Negocjacje</button>
+        </div>
+    </div>
+    
+    <button class="sound-toggle" id="sound-toggle" title="Wycisz/Włącz dźwięk">🔊</button>
+</div>
+
+<!-- Slid-out Details Panel (Cyberpunk Terminal) -->
+<div class="panel-overlay" id="panel-overlay"></div>
+<div class="details-panel" id="profile-panel">
+    <div class="panel-header">
+        <div class="panel-title-area">
+            <h2 id="modal-name">Marlena <span>Ługowska</span></h2>
+            <div class="panel-meta">
+                <span id="modal-meta-age">32 lata</span>
+                <span class="separator"></span>
+                <span id="modal-meta-location">Warszawa</span>
+            </div>
+        </div>
+        <button class="panel-close-btn" id="close-panel-btn" title="Zamknij terminal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    
+    <div class="panel-body">
+        <!-- Gallery Section -->
+        <div class="panel-gallery-container">
+            <div class="panel-main-image-wrapper">
+                <img id="modal-main-img" src="" alt="Casting Candidate">
+            </div>
+            <div class="panel-gallery-thumbnails" id="modal-thumbnails">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+        
+        <!-- Info layout grid including stats and radar skill graph side-by-side -->
+        <div class="info-layout-wrapper">
+            <!-- Contact & Rate Stats -->
+            <div>
+                <div class="panel-section-title">Metadane / Kontakt</div>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Poczta e-mail</span>
+                        <span class="detail-val" id="modal-email">marlena@example.com</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Linia telefoniczna</span>
+                        <span class="detail-val" id="modal-phone">123 456 789</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Stawka operacyjna</span>
+                        <span class="detail-val" id="modal-rate">Ustalana indywidualnie</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hexagonal Radar Canvas Chart -->
+            <div class="radar-chart-container">
+                <div class="panel-section-title" style="align-self: flex-start; margin-bottom: 5px;">Kompetencje HUD</div>
+                <canvas id="radar-chart" width="220" height="180"></canvas>
+            </div>
+        </div>
+
+        <!-- Experience Profiler -->
+        <div class="experience-box">
+            <div class="panel-section-title">Dokumentacja / Doświadczenie</div>
+            <p id="modal-experience">Lorem ipsum dolor sit amet...</p>
+        </div>
+
+        <!-- Media Port (Tab View) -->
+        <div>
+            <div class="panel-section-title">Kanał wideo / Demo port</div>
+            <div class="materials-container">
+                <div class="material-links" id="modal-material-links">
+                    <!-- Rendered by JS -->
+                </div>
+                <div class="player-container" id="video-player-container">
+                    <!-- Native player or Iframe -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // -------------------------------------------------------------
+    // Web Audio Synthesizer (Procedural ticks & Ambient Hum)
+    // -------------------------------------------------------------
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let isSoundMuted = false;
+    let ambientHumNode = null;
+    let ambientHumGain = null;
+
+    function playTick(freq = 1200, duration = 0.05, type = 'sine', volume = 0.04) {
+        if (isSoundMuted) return;
+        try {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            
+            gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        } catch (e) {
+            console.log("Audio play error: ", e);
+        }
+    }
+
+    // Start procedural sci-fi ambient hum
+    function startAmbientHum() {
+        if (isSoundMuted) return;
+        try {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            if (ambientHumNode) return;
+            
+            // Oscillator 1: low hum
+            ambientHumNode = audioCtx.createOscillator();
+            ambientHumGain = audioCtx.createGain();
+            
+            ambientHumNode.type = 'sawtooth';
+            ambientHumNode.frequency.setValueAtTime(55, audioCtx.currentTime); // A1 note
+            
+            // Low-pass filter to make it a deep rumble
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(80, audioCtx.currentTime);
+            
+            // Gain node to keep it extremely quiet
+            ambientHumGain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+            
+            ambientHumNode.connect(filter);
+            filter.connect(ambientHumGain);
+            ambientHumGain.connect(audioCtx.destination);
+            
+            ambientHumNode.start();
+        } catch(e) {}
+    }
+
+    function stopAmbientHum() {
+        try {
+            if (ambientHumNode) {
+                ambientHumNode.stop();
+                ambientHumNode.disconnect();
+                ambientHumNode = null;
+            }
+        } catch(e) {}
+    }
+
+    // Toggle sound mute
+    const soundToggleBtn = document.getElementById('sound-toggle');
+    soundToggleBtn.onclick = function() {
+        isSoundMuted = !isSoundMuted;
+        if (isSoundMuted) {
+            soundToggleBtn.innerText = '🔇';
+            soundToggleBtn.style.color = '#64748b';
+            stopAmbientHum();
+        } else {
+            soundToggleBtn.innerText = '🔊';
+            soundToggleBtn.style.color = 'var(--lime-color)';
+            playTick(1500, 0.06);
+            startAmbientHum();
+        }
+    };
+
+    // -------------------------------------------------------------
+    // Custom lagging cursor interpolation (lerp)
+    // -------------------------------------------------------------
+    const ring = document.getElementById('custom-cursor-ring');
+    const dot = document.getElementById('custom-cursor-dot');
+    let mouseX = -100;
+    let mouseY = -100;
+    let ringX = -100;
+    let ringY = -100;
+
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        dot.style.left = mouseX + 'px';
+        dot.style.top = mouseY + 'px';
+    });
+
+    function updateCursor() {
+        // Linear interpolation
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        ring.style.left = ringX + 'px';
+        ring.style.top = ringY + 'px';
+        requestAnimationFrame(updateCursor);
+    }
+    requestAnimationFrame(updateCursor);
+
+    // Setup cursor expand on interactive tags
+    function setupCursorListeners() {
+        const triggers = document.querySelectorAll('button, input, .filter-btn, .thumb-img, .candidate-card');
+        triggers.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                ring.classList.add('custom-cursor-hover');
+            });
+            el.addEventListener('mouseleave', () => {
+                ring.classList.remove('custom-cursor-hover');
+            });
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Boot intro sequence logs
+    // -------------------------------------------------------------
+    const loader = document.getElementById('boot-loader');
+    const progress = document.getElementById('boot-progress-bar');
+    const consoleEl = document.getElementById('boot-console');
+    const logs = [
+        "INITIALIZING DEVELPRO CORE HUD...",
+        "LOADING DATA STORAGE NODES...",
+        "EXTRACTING SENDER MAIL METADATA...",
+        "PARSING ATTACHMENT IMAGES [OK]",
+        "SYNTHESIZING DIGITAL SOUND HARMONICS...",
+        "CONNECTING TO THE LASER GRID BOARD...",
+        "SYSTEM ONLINE. LIVE."
+    ];
+    let logIdx = 0;
+
+    function printLog() {
+        if (logIdx < logs.length) {
+            consoleEl.innerHTML += "> " + logs[logIdx] + "<br>";
+            playTick(1000 + logIdx * 80, 0.02, 'sine', 0.02);
+            logIdx++;
+            setTimeout(printLog, 120 + Math.random() * 80);
+        } else {
+            progress.style.width = '100%';
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+                playTick(1800, 0.25, 'triangle', 0.08); // Boot finished sweep sound
+                startAmbientHum();
+            }, 450);
+        }
+    }
+    setTimeout(printLog, 200);
+
+    // -------------------------------------------------------------
+    // Canvas Node Web Background animation
+    // -------------------------------------------------------------
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const maxParticles = 65;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.4;
+            this.vy = (Math.random() - 0.5) * 0.4;
+            this.radius = Math.random() * 2 + 1;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            // Boundary collision
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            
+            // Attract to mouse cursor slightly if close
+            const dx = mouseX - this.x;
+            const dy = mouseY - this.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 150) {
+                this.x += dx * 0.005;
+                this.y += dy * 0.005;
+            }
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(120, 110, 195, 0.2)';
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < maxParticles; i++) {
+        particles.push(new Particle());
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(120, 110, 195, ${0.1 * (1 - dist/120)})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // -------------------------------------------------------------
+    // Candidates Database (12 complete records with skill weights)
+    // -------------------------------------------------------------
+    const candidates = [
+      {
+        id: 1,
+        name: "Marlena Ługowska",
+        age: 32,
+        gender: "Kobieta",
+        location: "Warszawa",
+        email: "marlena.ugowska@gmail.com",
+        phone: "Nie podano w mailu",
+        rate: "Zależy od pól eksploatacji i kampanii",
+        rateCategory: "to-negotiate",
+        experience: "Pracowała wcześniej w branży nieruchomościowej jako rzeczoznawca majątkowy, co daje doskonałą znajomość tematyki i terminologii. Obecnie zajmuje się profesjonalnie aktorstwem. Bardzo dobra kandydatura do merytorycznych prezentacji.",
+        tags: ["Nieruchomości", "Aktorka", "Warszawa"],
+        skills: [90, 85, 80, 75, 85], // Nieruchomości, Dykcja, Kamera, Gra, Pewność siebie
+        materials: [
+          { type: "youtube", label: "Wizytówka wideo", url: "https://youtu.be/LiMpPOGed-g", embedUrl: "https://www.youtube.com/embed/LiMpPOGed-g" }
+        ],
+        photos: [
+          "./photos/marlena_lugowska_1.jpg",
+          "./photos/marlena_lugowska_2.jpg",
+          "./photos/marlena_lugowska_3.jpg",
+          "./photos/marlena_lugowska_4.jpg"
+        ]
+      },
+      {
+        id: 2,
+        name: "Małgorzata Okulicz",
+        age: 53,
+        gender: "Kobieta",
+        location: "Warszawa",
+        email: "mokulicz@poczta.onet.pl",
+        phone: "507 005 903",
+        rate: "800 - 1500 zł (małe proj.) / od 2500 zł (duże proj.)",
+        rateCategory: "specified",
+        experience: "Doświadczenie w spotach reklamowych (np. Dentysta Olsztyn). Pracuje jako fotomodelka dojrzała. Pełna energii, świetny naturalny wyraz przed kamerą.",
+        tags: ["Prezenterka", "Modelka", "Dojrzałe Pokolenie", "Warszawa"],
+        skills: [40, 92, 90, 85, 90],
+        materials: [
+          { type: "youtube", label: "Wizytówka wideo", url: "https://youtu.be/LjhdPcqUdpc", embedUrl: "https://www.youtube.com/embed/LjhdPcqUdpc" },
+          { type: "youtube", label: "Klip Dentysta Studio (od 2:50)", url: "https://facebook.com/dentalstudioolsztyn/videos/1603847483818290", embedUrl: "https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Fdentalstudioolsztyn%2Fvideos%2F1603847483818290%2F" }
+        ],
+        photos: [
+          "./photos/malgorzata_okulicz_twarz.jpg",
+          "./photos/malgorzata_okulicz_sylwetka.jpg"
+        ]
+      },
+      {
+        id: 3,
+        name: "Gabriela Szymczak",
+        age: null,
+        gender: "Kobieta",
+        location: "Warszawa",
+        email: "gszymczak99@gmail.com",
+        phone: "535 872 940",
+        rate: "Do uzgodnienia",
+        rateCategory: "to-negotiate",
+        experience: "Kandydatka o naturalnej i ciepłej prezencji. Atutem jest znajomość języka migowego, co może być doskonałym wyróżnikiem w kampaniach inkluzywnych lub specjalnych komunikatach wideo dla inwestycji.",
+        tags: ["Język Migowy", "Prezenterka", "Warszawa"],
+        skills: [30, 80, 85, 75, 80],
+        materials: [
+          { type: "youtube", label: "Wizytówka wideo", url: "https://youtu.be/XdC8DyZKtRM", embedUrl: "https://www.youtube.com/embed/XdC8DyZKtRM" }
+        ],
+        photos: [
+          "./photos/gabriela_szymczak_1.jpg",
+          "./photos/gabriela_szymczak_2.jpg",
+          "./photos/gabriela_szymczak_sylwetka.jpg"
+        ]
+      },
+      {
+        id: 4,
+        name: "Michał Mrowca",
+        age: 53,
+        gender: "Mężczyzna",
+        location: "Łódź",
+        email: "michalmrowca@vp.pl",
+        phone: "691 070 262",
+        rate: "Do uzgodnienia",
+        rateCategory: "to-negotiate",
+        experience: "Absolwent Ekonomii na UŁ (Inwestycje i Nieruchomości) oraz podyplomowych studiów wyceny. Przeszedł również 2-letnie studia aktorskie w Łodzi. Unikalna kombinacja wiedzy merytorycznej i gry aktorskiej. Świetny głos.",
+        tags: ["Nieruchomości", "Zawodowy Aktor", "Lektor", "Łódź"],
+        skills: [95, 90, 88, 85, 88],
+        materials: [
+          { type: "video", label: "Wizytówka MP4", url: "./photos/michal_mrowca_showreel.mp4" }
+        ],
+        photos: [
+          "./photos/michal_mrowca_1.jpg",
+          "./photos/michal_mrowca_2.jpg"
+        ]
+      },
+      {
+        id: 5,
+        name: "Jakub Naumiuk",
+        age: 45,
+        gender: "Mężczyzna",
+        location: "Warszawa",
+        email: "naumiukowie@wp.pl",
+        phone: "607 079 503",
+        rate: "Do uzgodnienia",
+        rateCategory: "to-negotiate",
+        experience: "Pracuje w Warszawie jako lektor i epizodysta. Duża łatwość wysławiania się, poprawna polszczyzna. Pasjonat stylu vintage (prowadzi IG @jakubvintage), o wyrazistej, budzącej zaufanie prezencji.",
+        tags: ["Epizodysta", "Lektor", "Vintage", "Warszawa"],
+        skills: [60, 88, 82, 80, 80],
+        materials: [
+          { type: "youtube", label: "Wizytówka wideo", url: "https://youtube.com/shorts/k49ldGgK9zw", embedUrl: "https://www.youtube.com/embed/k49ldGgK9zw" }
+        ],
+        photos: [
+          "./photos/jakub_naumiuk_1.jpg",
+          "./photos/jakub_naumiuk_2.jpg",
+          "./photos/jakub_naumiuk_3.jpg"
+        ]
+      },
+      {
+        id: 6,
+        name: "Aleksandra Góral",
+        age: 25,
+        gender: "Kobieta",
+        location: "Zgierz / Wrocław",
+        email: "aleksandragoral00@gmail.com",
+        phone: "881 358 061",
+        rate: "125 - 200 zł / godzina",
+        rateCategory: "specified",
+        experience: "Młoda, pełna energii aktorka i prezenterka ze Zgierza (działająca również we Wrocławiu). Świetny naturalny kontakt przed kamerą i radiowa dykcja.",
+        tags: ["Młode Pokolenie", "Prezenterka", "Wrocław / Zgierz"],
+        skills: [50, 92, 90, 88, 85],
+        materials: [
+          { type: "youtube", label: "Wizytówka wideo", url: "https://youtu.be/UUKFtY572tI?is=Q3pH0_4oge-qPipu", embedUrl: "https://www.youtube.com/embed/UUKFtY572tI" }
+        ],
+        photos: [
+          "./photos/aleksandra_goral_1.jpg",
+          "./photos/aleksandra_goral_2.jpg",
+          "./photos/aleksandra_goral_3.jpg"
+        ]
+      },
+      {
+        id: 7,
+        name: "Leszek Żukowski",
+        age: null,
+        gender: "Mężczyzna",
+        location: "Warszawa / Łódź",
+        email: "lzukowski@poczta.onet.pl",
+        phone: "575 874 265",
+        rate: "Do uzgodnienia",
+        rateCategory: "to-negotiate",
+        experience: "Zawodowy aktor i lektor radiowy/telewizyjny. Grał główną rolę w profesjonalnych spotach reklamowych. Dysponuje radiowym głosem i nienaganną dykcją, idealną do nagrywania lektorskiego i narracji wideo dla inwestycji premium.",
+        tags: ["Zawodowy Aktor", "Lektor", "Warszawa / Łódź"],
+        skills: [80, 98, 95, 92, 90],
+        materials: [
+          { type: "youtube", label: "Główna rola w reklamie", url: "https://youtu.be/HHLvsaiDra4?is=PdkJh-DJi4UUpobt", embedUrl: "https://www.youtube.com/embed/HHLvsaiDra4" }
+        ],
+        photos: [
+          "./photos/leszek_zukowski_1.jpg",
+          "./photos/leszek_zukowski_2.jpg"
+        ]
+      },
+      {
+        id: 8,
+        name: "Adrian Pikała",
+        age: 33,
+        gender: "Mężczyzna",
+        location: "Warszawa",
+        email: "adrianpikala@gmail.com",
+        phone: "792 252 512",
+        rate: "250 zł netto/h (lub 1000 zł netto/dzień)",
+        rateCategory: "specified",
+        experience: "Doświadczenie w statystowaniu i rolach epizodycznych z tekstem (m.in. epizod w zagranicznej reklamie Displate, jedna z pięciu głównych ról w kampanii marki Answear oraz sesja foto-wideo Jacobs).",
+        tags: ["Epizodysta", "Sesje Reklamowe", "Warszawa"],
+        skills: [50, 85, 88, 88, 85],
+        materials: [
+          { type: "youtube", label: "Wizytówka wideo 1", url: "https://youtu.be/Jnfap7H_fkU?si=Dc2hvsBUgEVZat8z", embedUrl: "https://www.youtube.com/embed/Jnfap7H_fkU" },
+          { type: "youtube", label: "Wizytówka wideo 2", url: "https://youtu.be/kdKLS75ST64?is=fCloPW0BM2HwtDSq", embedUrl: "https://www.youtube.com/embed/kdKLS75ST64" },
+          { type: "instagram", label: "Jacobs Instagram", url: "https://www.instagram.com/p/DR4rj2SjFSy/?igsh=MThpZHd4dDA3bXQxdQ==" },
+          { type: "instagram", label: "Media Expert Instagram", url: "https://www.instagram.com/reel/DaAFaWokh8G/?igsh=eXR3Z3oxdW9rYTh1" }
+        ],
+        photos: [
+          "./photos/adrian_pikala_1.jpg",
+          "./photos/adrian_pikala_2.jpg",
+          "./photos/adrian_pikala_sylwetka.jpg"
+        ]
+      },
+      {
+        id: 9,
+        name: "Kamila Afeltowicz",
+        age: 33,
+        gender: "Kobieta",
+        location: "Warszawa",
+        email: "kamilaafeltowicz@gmail.com",
+        phone: "663 704 572",
+        rate: "Do uzgodnienia",
+        rateCategory: "to-negotiate",
+        experience: "Aktorka, absolwentka Warszawskiej Szkoły Filmowej (170 cm wzrostu). Doświadczenie przed kamerą w rolach aktorskich, reklamowych oraz UGC. Tworzy profesjonalne, autentyczne materiały wideo budujące zaufanie w social media.",
+        tags: ["Aktorka", "UGC", "Warszawska Szkoła Filmowa", "Warszawa"],
+        skills: [40, 90, 92, 90, 88],
+        materials: [
+          { type: "youtube", label: "Wizytówka wideo", url: "https://youtu.be/HHumke4em3c?is=eJk1u9B17Nn5wCSW", embedUrl: "https://www.youtube.com/embed/HHumke4em3c" },
+          { type: "youtube", label: "Demo reklamowe", url: "https://youtu.be/PvX95QHzpBo", embedUrl: "https://www.youtube.com/embed/PvX95QHzpBo" },
+          { type: "instagram", label: "UGC Reel (Instagram)", url: "https://www.instagram.com/reel/DGXuRZouSMJ/?igsh=MTluOHBlbzNoeGhoZw==" },
+          { type: "facebook", label: "UGC Facebook 1", url: "https://www.facebook.com/share/v/1GGcdGLDD8/?mibextid=wwXIfr" },
+          { type: "facebook", label: "UGC Facebook 2", url: "https://www.facebook.com/share/v/16853QU1mS/?mibextid=wwXIfr" }
+        ],
+        photos: [
+          "./photos/kamila_afeltowicz_1.jpg",
+          "./photos/kamila_afeltowicz_2.jpg",
+          "./photos/kamila_afeltowicz_3.jpg",
+          "./photos/kamila_afeltowicz_sylwetka.jpg"
+        ]
+      },
+      {
+        id: 10,
+        name: "Justyna Klimek",
+        age: 39,
+        gender: "Kobieta",
+        location: "Zielona Góra / Wrocław",
+        email: "klimek_justyna@wp.pl",
+        phone: "721 426 007",
+        rate: "Do uzgodnienia",
+        rateCategory: "to-negotiate",
+        experience: "Studentka aktorstwa w Lubuskiej Szkole Aktorskiej w Zielonej Górze. Doświadczenie jako epizodystka i statystka w popularnych serialach telewizyjnych (m.in. Pierwsza Miłość, Sprawiedliwi, Lombard, Uroczysko, Ukryta Prawda). Modelka pokazów mody (Fashion Week Wrocław 2025). Zagrała w reklamie Perły Chmielowej.",
+        tags: ["Epizodysta", "Modelka Pokazowa", "Studentka Aktorstwa", "Wrocław / Zielona Góra"],
+        skills: [35, 90, 92, 90, 88],
+        materials: [
+          { type: "youtube", label: "Wizytówka wideo", url: "https://youtu.be/u4Sd3ngPpNU?is=FwnuWIuTggaSZy0Q", embedUrl: "https://www.youtube.com/embed/u4Sd3ngPpNU" },
+          { type: "youtube", label: "Demo aktorskie", url: "https://youtu.be/UJ7uSvggHZk?is=J9ThzvCeIguU1h1Q", embedUrl: "https://www.youtube.com/embed/UJ7uSvggHZk" },
+          { type: "youtube", label: "Film (sitcom Zielona Parka)", url: "https://youtu.be/aH1j4jYhj0Q", embedUrl: "https://www.youtube.com/embed/aH1j4jYhj0Q" },
+          { type: "youtube", label: "Serial wideo", url: "https://youtu.be/YBBzDTsLaHY?is=Q51ggyYSyL5yA6gi", embedUrl: "https://www.youtube.com/embed/YBBzDTsLaHY" },
+          { type: "instagram", label: "Instagram", url: "https://www.instagram.com/klimjus/" }
+        ],
+        photos: [
+          "./photos/justyna_klimek_1.jpg",
+          "./photos/justyna_klimek_2.jpg",
+          "./photos/justyna_klimek_3.jpg",
+          "./photos/justyna_klimek_4.jpg",
+          "./photos/justyna_klimek_5.jpg",
+          "./photos/justyna_klimek_6.jpg"
+        ]
+      },
+      {
+        id: 11,
+        name: "Mariusz Odwarzny",
+        age: 40,
+        gender: "Mężczyzna",
+        location: "Warszawa",
+        email: "m.odwarzny@gmail.com",
+        phone: "600 005 716",
+        rate: "1000 - 1500 zł brutto / dzień zdjęciowy",
+        rateCategory: "specified",
+        experience: "Aktor zawodowy, konferansjer, wokalista i reporter. Ukończył Studio Teatralne Baza oraz Kulturoznawstwo na UWr. Prowadził programy na kanałach TV Gameta, Rolnik na Czasie oraz TV Answear. Duże doświadczenie w nagraniach z prompterem i podcastów.",
+        tags: ["Zawodowy Aktor", "Prezenter", "Konferansjer", "Warszawa"],
+        skills: [70, 95, 96, 94, 92],
+        materials: [
+          { type: "youtube", label: "Świeża Wizytówka", url: "https://youtu.be/m66dPz_L9BA?is=odD8Z_zExD7DuZqa", embedUrl: "https://www.youtube.com/embed/m66dPz_L9BA" },
+          { type: "youtube", label: "Najnowsza produkcja", url: "https://youtu.be/zqcUZQ0VIcM?si=oHmKgxMuT6WXm8cg", embedUrl: "https://www.youtube.com/embed/zqcUZQ0VIcM" },
+          { type: "youtube", label: "Prompter Realizacja", url: "https://youtu.be/3cOEV8uD3dw?si=HFEDY9KlCc_5Yn4J", embedUrl: "https://www.youtube.com/embed/3cOEV8uD3dw" },
+          { type: "youtube", label: "Gameta 1", url: "https://youtu.be/BcyLxqHbCcc", embedUrl: "https://www.youtube.com/embed/BcyLxqHbCcc" },
+          { type: "youtube", label: "Gameta 2", url: "https://youtu.be/DQ5RxLNndXA", embedUrl: "https://www.youtube.com/embed/DQ5RxLNndXA" }
+        ],
+        photos: [
+          "./photos/mariusz_odwarzny_1.jpg"
+        ]
+      },
+      {
+        id: 12,
+        name: "Sylwia Sokołowska",
+        age: 30,
+        gender: "Kobieta",
+        location: "Warszawa",
+        email: "ssokolovvska@gmail.com",
+        phone: "881 490 051",
+        rate: "Do uzgodnienia (w zależności od praw eksploatacji)",
+        rateCategory: "to-negotiate",
+        experience: "Zawodowa aktorka z dużym doświadczeniem przed kamerą, nienaganną dykcją, świetną prezencją sceniczną i wysoką kulturą osobistą.",
+        tags: ["Zawodowa Aktorka", "Warszawa"],
+        skills: [45, 96, 94, 95, 90],
+        materials: [
+          { type: "youtube", label: "Przemówienie do kamery", url: "https://youtu.be/LOs2MUbiknI?is=DOzm665CYF_ZscBn", embedUrl: "https://www.youtube.com/embed/LOs2MUbiknI" },
+          { type: "youtube", label: "Wizytówka wideo", url: "https://youtu.be/AT2XNLdEIJA?is=q3eq7rNNDgblo0IP", embedUrl: "https://www.youtube.com/embed/AT2XNLdEIJA" },
+          { type: "vimeo", label: "Reklama z moim udziałem", url: "https://vimeo.com/795337304?share=copy", embedUrl: "https://player.vimeo.com/video/795337304" }
+        ],
+        photos: [
+          "./photos/sylwia_sokolowska_1.jpg"
+        ]
+      }
+    ];
+
+    // Filter states
+    let activeLocation = 'all';
+    let activeGender = 'all';
+    let activeRate = 'all';
+    let searchQuery = '';
+
+    const grid = document.getElementById('candidates-grid');
+    const searchInput = document.getElementById('search-input');
+    const panel = document.getElementById('profile-panel');
+    const overlay = document.getElementById('panel-overlay');
+
+    // Render candidates cards
+    function renderCards() {
+        grid.innerHTML = '';
+        
+        const filtered = candidates.filter(cand => {
+            // Location filter
+            const matchLocation = activeLocation === 'all' || cand.location.includes(activeLocation);
+            
+            // Gender filter
+            const matchGender = activeGender === 'all' || cand.gender === activeGender;
+            
+            // Rate filter
+            const matchRate = activeRate === 'all' || cand.rateCategory === activeRate;
+            
+            // Search query filter
+            const textToSearch = `${cand.name} ${cand.location} ${cand.experience} ${cand.tags.join(' ')}`.toLowerCase();
+            const matchSearch = searchQuery === '' || textToSearch.includes(searchQuery.toLowerCase());
+            
+            return matchLocation && matchGender && matchRate && matchSearch;
+        });
+
+        if (filtered.length === 0) {
+            grid.innerHTML = '<div class="no-results">Brak kandydatów spełniających wybrane kryteria.</div>';
+            return;
+        }
+
+        filtered.forEach(cand => {
+            // Card wrapper for 3D Perspective
+            const wrapper = document.createElement('div');
+            wrapper.className = 'candidate-card-wrapper';
+
+            const card = document.createElement('div');
+            card.className = 'candidate-card';
+            
+            // Image area rendering
+            let imageHTML = '';
+            if (cand.photos && cand.photos.length > 0) {
+                imageHTML = `<img src="${cand.photos[0]}" alt="${cand.name}" loading="lazy">`;
+            } else {
+                const initials = cand.name.split(' ').map(n => n[0]).join('');
+                imageHTML = `
+                    <div class="no-photo-placeholder">
+                        <div class="no-photo-avatar">${initials}</div>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">Brak zdjęć</span>
+                    </div>
+                `;
+            }
+
+            // Tags rendering
+            const tagsHTML = cand.tags.slice(0, 3).map(t => {
+                let tagClass = 'tag';
+                if (t === 'Nieruchomości' || t === 'Zawodowy Aktor' || t === 'Zawodowa Aktorka') tagClass += ' tag-special';
+                return `<span class="${tagClass}">${t}</span>`;
+            }).join('');
+
+            card.innerHTML = `
+                <div class="card-image-area">
+                    ${imageHTML}
+                    <span class="badge-location">${cand.location.split(' / ')[0]}</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="candidate-name">${cand.name}</h3>
+                    <div class="candidate-meta">
+                        <span>${cand.age ? cand.age + ' lat' : 'Wiek nieznany'}</span>
+                        <span class="separator"></span>
+                        <span>${cand.gender}</span>
+                    </div>
+                    <p class="candidate-desc">${cand.experience.substring(0, 100)}...</p>
+                    <div class="tag-container">
+                        ${tagsHTML}
+                    </div>
+                    <div class="card-footer">
+                        <div class="rate-info">
+                            <span class="rate-label">Stawka</span>
+                            <span class="rate-value">${cand.rate.length > 25 ? cand.rate.substring(0, 22) + '...' : cand.rate}</span>
+                        </div>
+                        <button class="action-btn" onclick="openPanel(${cand.id})">KONSOLA</button>
+                    </div>
+                </div>
+            `;
+            wrapper.appendChild(card);
+            grid.appendChild(wrapper);
+
+            // Add 3D Hover tilt events to the card
+            setupTiltEffect(wrapper, card);
+        });
+
+        // Re-setup custom cursor listeners for newly rendered items
+        setupCursorListeners();
+    }
+
+    // -------------------------------------------------------------
+    // Card 3D Mouse Tilt effect
+    // -------------------------------------------------------------
+    function setupTiltEffect(wrapper, card) {
+        wrapper.addEventListener('mousemove', (e) => {
+            const rect = wrapper.getBoundingClientRect();
+            const x = e.clientX - rect.left; // Mouse position inside card
+            const y = e.clientY - rect.top;
+            const w = rect.width;
+            const h = rect.height;
+            
+            // Map coordinate to degrees (-8deg to 8deg)
+            const rotX = ((y / h) - 0.5) * -16;
+            const rotY = ((x / w) - 0.5) * 16;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Canvas Skill Radar Chart generator
+    // -------------------------------------------------------------
+    function drawRadarChart(skillsArray) {
+        const rcCanvas = document.getElementById('radar-chart');
+        const rc = rcCanvas.getContext('2d');
+        rc.clearRect(0, 0, rcCanvas.width, rcCanvas.height);
+
+        const skillsLabels = ["Merytoryka", "Dykcja", "Kamera", "Gra", "Pewność"];
+        const numSides = 5;
+        const centerX = rcCanvas.width / 2;
+        const centerY = rcCanvas.height / 2;
+        const maxRadius = 60;
+
+        // 1. Draw web grid levels
+        for (let level = 1; level <= 4; level++) {
+            rc.beginPath();
+            const radius = (maxRadius / 4) * level;
+            for (let i = 0; i < numSides; i++) {
+                const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                if (i === 0) rc.moveTo(x, y);
+                else rc.lineTo(x, y);
+            }
+            rc.closePath();
+            rc.strokeStyle = 'rgba(120, 110, 195, 0.2)';
+            rc.lineWidth = 1;
+            rc.stroke();
+        }
+
+        // 2. Draw axis lines
+        rc.beginPath();
+        for (let i = 0; i < numSides; i++) {
+            const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
+            rc.moveTo(centerX, centerY);
+            rc.lineTo(centerX + maxRadius * Math.cos(angle), centerY + maxRadius * Math.sin(angle));
+        }
+        rc.strokeStyle = 'rgba(120, 110, 195, 0.35)';
+        rc.stroke();
+
+        // 3. Plot candidate skill points
+        rc.beginPath();
+        for (let i = 0; i < numSides; i++) {
+            const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
+            const val = skillsArray[i] || 50; // fallback
+            const radius = (maxRadius * val) / 100;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            if (i === 0) rc.moveTo(x, y);
+            else rc.lineTo(x, y);
+        }
+        rc.closePath();
+        rc.fillStyle = 'rgba(215, 255, 0, 0.2)';
+        rc.fill();
+        rc.strokeStyle = 'var(--lime-color)';
+        rc.lineWidth = 2;
+        rc.stroke();
+
+        // 4. Draw labels
+        rc.fillStyle = 'var(--text-secondary)';
+        rc.font = '600 8.5px "Share Tech Mono", monospace';
+        rc.textAlign = 'center';
+        rc.textBaseline = 'middle';
+        
+        for (let i = 0; i < numSides; i++) {
+            const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
+            const labelRadius = maxRadius + 14;
+            const x = centerX + labelRadius * Math.cos(angle);
+            const y = centerY + labelRadius * Math.sin(angle);
+            rc.fillText(skillsLabels[i], x, y);
+        }
+    }
+
+    // -------------------------------------------------------------
+    // Slide-out panel operations
+    // -------------------------------------------------------------
+    function openPanel(id) {
+        playTick(1200, 0.05); // Play click tick
+
+        const cand = candidates.find(c => c.id === id);
+        if (!cand) return;
+
+        // Populate panel textual information
+        const nameParts = cand.name.split(' ');
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(' ');
+        document.getElementById('modal-name').innerHTML = `${firstName} <span>${lastName}</span>`;
+        document.getElementById('modal-meta-age').innerText = cand.age ? cand.age + ' lat' : 'Wiek nieznany';
+        document.getElementById('modal-meta-location').innerText = cand.location;
+        document.getElementById('modal-email').innerText = cand.email;
+        document.getElementById('modal-phone').innerText = cand.phone;
+        document.getElementById('modal-rate').innerText = cand.rate;
+        document.getElementById('modal-experience').innerText = cand.experience;
+
+        // Draw skill radar
+        drawRadarChart(cand.skills || [60, 80, 80, 80, 80]);
+
+        // Image Gallery setup
+        const mainImg = document.getElementById('modal-main-img');
+        const thumbsContainer = document.getElementById('modal-thumbnails');
+        thumbsContainer.innerHTML = '';
+        
+        // Remove older placeholders if any
+        const oldPlaceholder = document.querySelector('.panel-main-image-wrapper .no-photo-placeholder');
+        if (oldPlaceholder) oldPlaceholder.remove();
+
+        if (cand.photos && cand.photos.length > 0) {
+            mainImg.style.display = 'block';
+            mainImg.src = cand.photos[0];
+            
+            cand.photos.forEach((p, idx) => {
+                const img = document.createElement('img');
+                img.src = p;
+                img.className = `thumb-img ${idx === 0 ? 'active' : ''}`;
+                img.onclick = function() {
+                    playTick(1500, 0.03);
+                    document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+                    img.classList.add('active');
+                    mainImg.src = p;
+                };
+                thumbsContainer.appendChild(img);
+            });
+        } else {
+            const initials = cand.name.split(' ').map(n => n[0]).join('');
+            thumbsContainer.innerHTML = '';
+            mainImg.style.display = 'none';
+            
+            const placeholder = document.createElement('div');
+            placeholder.className = 'no-photo-placeholder';
+            placeholder.innerHTML = `
+                <div class="no-photo-avatar">${initials}</div>
+                <h4 style="margin-top: 10px; color: var(--text-primary);">Brak zdjęć w zgłoszeniu</h4>
+            `;
+            document.querySelector('.panel-main-image-wrapper').appendChild(placeholder);
+        }
+
+        // Setup material videos
+        const linksContainer = document.getElementById('modal-material-links');
+        const playerContainer = document.getElementById('video-player-container');
+        linksContainer.innerHTML = '';
+        playerContainer.innerHTML = '';
+        playerContainer.classList.remove('active');
+
+        if (cand.materials && cand.materials.length > 0) {
+            cand.materials.forEach((m, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `material-btn ${idx === 0 && (m.type === 'youtube' || m.type === 'vimeo' || m.type === 'video') ? 'active' : ''}`;
+                
+                let icon = '🔗';
+                if (m.type === 'youtube') icon = '🎬';
+                else if (m.type === 'vimeo') icon = '💎';
+                else if (m.type === 'video') icon = '📹';
+                
+                btn.innerHTML = `${icon} ${m.label}`;
+                
+                btn.onclick = function() {
+                    playTick(1300, 0.04);
+                    document.querySelectorAll('.material-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    playMedia(m);
+                };
+                
+                linksContainer.appendChild(btn);
+            });
+
+            // Autoplay first video
+            const firstMedia = cand.materials[0];
+            if (firstMedia.type === 'youtube' || firstMedia.type === 'vimeo' || firstMedia.type === 'video') {
+                playMedia(firstMedia);
+            }
+        }
+
+        // Slide in panel
+        panel.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closePanel() {
+        playTick(800, 0.08); // Play lower tick on close
+        panel.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Stop playing any videos
+        const player = document.getElementById('video-player-container');
+        player.innerHTML = '';
+        player.classList.remove('active');
+    }
+
+    function playMedia(media) {
+        const player = document.getElementById('video-player-container');
+        player.innerHTML = '';
+        
+        if (media.type === 'youtube') {
+            player.classList.add('active');
+            player.innerHTML = `
+                <iframe src="${media.embedUrl}?autoplay=1&mute=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            `;
+        } else if (media.type === 'vimeo') {
+            player.classList.add('active');
+            player.innerHTML = `
+                <iframe src="${media.embedUrl}?autoplay=1&muted=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+            `;
+        } else if (media.type === 'video') {
+            player.classList.add('active');
+            player.innerHTML = `
+                <video src="${media.url}" controls autoplay></video>
+            `;
+        }
+    }
+
+    // Set up close actions
+    document.getElementById('close-panel-btn').onclick = closePanel;
+    overlay.onclick = closePanel;
+
+    // Floating Console Filter Events
+    function setupFilterButtons(groupId, stateVarSetter) {
+        const buttons = document.querySelectorAll(`#${groupId} .filter-btn`);
+        buttons.forEach(btn => {
+            btn.onclick = function() {
+                playTick(1400, 0.03); // Play hover-tick
+                document.querySelectorAll(`#${groupId} .filter-btn`).forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                stateVarSetter(btn.getAttribute('data-filter'));
+                renderCards();
+            };
+        });
+    }
+
+    setupFilterButtons('filter-location', (val) => activeLocation = val);
+    setupFilterButtons('filter-gender', (val) => activeGender = val);
+    setupFilterButtons('filter-rate', (val) => activeRate = val);
+
+    // Search input handler
+    searchInput.oninput = function() {
+        searchQuery = searchInput.value;
+        renderCards();
+    };
+
+    // Calculate and update stats panel
+    function updateStats() {
+        const total = candidates.length;
+        const experts = candidates.filter(c => c.tags.some(tag => tag.toLowerCase().includes("ekspert") || tag.toLowerCase().includes("nieruchom") || tag.toLowerCase().includes("luksus") || tag.toLowerCase().includes("zawodowy") || tag.toLowerCase().includes("aktorka"))).length;
+        const warszawa = candidates.filter(c => c.location.toLowerCase().includes("warszaw")).length;
+        const lodz = candidates.filter(c => c.location.toLowerCase().includes("łódź")).length;
+
+        // Perform cyber-count-up animation
+        animateCountUp('stat-total', total);
+        animateCountUp('stat-experts', experts);
+        animateCountUp('stat-warszawa', warszawa);
+        animateCountUp('stat-lodz', lodz);
+    }
+
+    function animateCountUp(elementId, targetVal) {
+        const el = document.getElementById(elementId);
+        let current = 0;
+        const step = Math.ceil(targetVal / 15) || 1;
+        const interval = setInterval(() => {
+            current += step;
+            if (current >= targetVal) {
+                current = targetVal;
+                clearInterval(interval);
+            }
+            el.innerText = current;
+        }, 30);
+    }
+
+    // Initial load
+    updateStats();
+    renderCards();
+</script>
+</body>
+</html>
