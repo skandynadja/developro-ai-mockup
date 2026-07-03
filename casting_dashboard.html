@@ -448,10 +448,6 @@
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .candidate-card-wrapper:hover .card-image-area img {
-            transform: scale(1.04);
-        }
-
         .badge-location {
             position: absolute;
             top: 15px;
@@ -1877,6 +1873,7 @@
 
             const card = document.createElement('div');
             card.className = 'candidate-card';
+            card.onclick = () => openPanel(cand.id);
             
             // Image area rendering
             let imageHTML = '';
@@ -1920,43 +1917,18 @@
                             <span class="rate-label">Stawka</span>
                             <span class="rate-value">${cand.rate.length > 25 ? cand.rate.substring(0, 22) + '...' : cand.rate}</span>
                         </div>
-                        <button class="action-btn" onclick="openPanel(${cand.id})">KONSOLA</button>
                     </div>
                 </div>
             `;
             wrapper.appendChild(card);
             grid.appendChild(wrapper);
-
-            // Add 3D Hover tilt events to the card
-            setupTiltEffect(wrapper, card);
         });
 
         // Re-setup custom cursor listeners for newly rendered items
         setupCursorListeners();
     }
 
-    // -------------------------------------------------------------
-    // Card 3D Mouse Tilt effect
-    // -------------------------------------------------------------
-    function setupTiltEffect(wrapper, card) {
-        wrapper.addEventListener('mousemove', (e) => {
-            const rect = wrapper.getBoundingClientRect();
-            const x = e.clientX - rect.left; // Mouse position inside card
-            const y = e.clientY - rect.top;
-            const w = rect.width;
-            const h = rect.height;
-            
-            // Map coordinate to degrees (-8deg to 8deg)
-            const rotX = ((y / h) - 0.5) * -16;
-            const rotY = ((x / w) - 0.5) * 16;
-            
-            card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02, 1.02, 1.02)`;
-        });
 
-        wrapper.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-        });
-    }
 
     // -------------------------------------------------------------
     // Canvas Skill Radar Chart generator
