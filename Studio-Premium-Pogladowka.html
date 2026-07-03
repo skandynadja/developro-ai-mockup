@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio Premium — poglądówka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#FBF8F2; --panel:#F1EBDD; --panel2:#EAE1CF;
+  --gold:#C9A96A; --gold-l:#A67F2C; --gold-d:#8A6B28;
+  --cream:#2C2A26; --muted:#8A8578; --line:rgba(44,42,38,.14);
+  --alab:#F5F1EA; --graf:#2C2A26;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--black); color:var(--cream);
+  font-family:'Inter','Helvetica Neue',Arial,sans-serif; font-weight:300;
+  line-height:1.6; overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+.serif{font-family:'Cormorant Garamond','Didot','Hoefler Text',Georgia,serif}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* grain + vignette overlays */
+.grain{position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.vign{position:fixed;inset:0;z-index:8;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 0%,transparent 62%,rgba(44,42,38,.05) 100%);}
+
+/* custom cursor */
+.cur,.curd{position:fixed;top:0;left:0;z-index:50;pointer-events:none;border-radius:50%;
+  transform:translate(-50%,-50%);will-change:transform}
+.cur{width:34px;height:34px;border:1px solid var(--gold-d);transition:width .25s,height .25s,background .25s,opacity .3s}
+.curd{width:5px;height:5px;background:var(--gold-l)}
+body.cursor .cur.big{width:78px;height:78px;background:rgba(138,107,40,.10);border-color:transparent}
+@media (hover:none),(pointer:coarse){.cur,.curd{display:none}}
+
+/* loader */
+#load{position:fixed;inset:0;z-index:100;background:var(--black);display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:18px;transition:opacity .8s ease,visibility .8s}
+#load.done{opacity:0;visibility:hidden}
+#load .mk{font-size:clamp(30px,7vw,58px);letter-spacing:.32em;color:var(--cream);overflow:hidden}
+#load .mk span{display:inline-block;transform:translateY(110%);animation:rise .9s cubic-bezier(.16,1,.3,1) forwards}
+#load .bar{width:min(240px,60vw);height:1px;background:rgba(44,42,38,.12);position:relative;overflow:hidden}
+#load .bar i{position:absolute;inset:0;background:var(--gold);transform-origin:left;transform:scaleX(0);animation:fill 1.2s ease forwards}
+#load .cap{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted)}
+@keyframes rise{to{transform:translateY(0)}}
+@keyframes fill{to{transform:scaleX(1)}}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+  padding:22px clamp(20px,5vw,60px)}
+nav .brand{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:.34em;text-transform:uppercase;font-weight:500}
+nav .brand b{color:var(--gold-l);font-weight:500}
+nav .links{display:flex;gap:34px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--cream)}
+nav .links a{position:relative;opacity:.8;transition:opacity .3s}
+nav .links a:hover{opacity:1}
+nav .links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--gold-l);transition:width .35s}
+nav .links a:hover::after{width:100%}
+@media(max-width:720px){nav .links{display:none}}
+
+/* hero */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:0 clamp(20px,5vw,60px);overflow:hidden}
+.glow{position:absolute;width:60vw;height:60vw;max-width:820px;max-height:820px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,169,106,.42),rgba(201,169,106,0) 62%);
+  filter:blur(30px);z-index:0;left:50%;top:40%;transform:translate(-50%,-50%);will-change:transform;pointer-events:none}
+.hero .eyebrow{position:relative;z-index:2;font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold-l);margin-bottom:34px}
+.hero h1{position:relative;z-index:2;font-weight:500;font-size:clamp(52px,12vw,168px);line-height:.94;letter-spacing:-.01em}
+.hero h1 .ln{display:block;overflow:hidden}
+.hero h1 .ln > i{display:inline-block;font-style:normal;transform:translateY(115%);opacity:0}
+.hero h1 em{font-style:italic;color:var(--gold-l)}
+.hero .sub{position:relative;z-index:2;max-width:560px;margin-top:40px;font-size:clamp(15px,1.7vw,19px);color:var(--muted)}
+.hero .cue{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);z-index:2;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:10px}
+.hero .cue .l{width:1px;height:46px;background:linear-gradient(var(--gold),transparent);animation:cue 2s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:scaleY(.4);opacity:.5;transform-origin:top}50%{transform:scaleY(1);opacity:1;transform-origin:top}}
+
+/* marquee */
+.marq{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;overflow:hidden;white-space:nowrap;background:var(--panel)}
+.marq .track{display:inline-block;animation:scroll 26s linear infinite}
+.marq span{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(22px,3vw,40px);color:var(--cream);opacity:.9;margin:0 26px}
+.marq span b{color:var(--gold);font-style:normal;font-family:'Inter';font-weight:300;font-size:.5em;letter-spacing:.3em;text-transform:uppercase;vertical-align:middle;margin:0 4px}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* generic section */
+section{position:relative;z-index:2}
+.wrap{max-width:1200px;margin:0 auto;padding:clamp(90px,13vw,190px) clamp(20px,5vw,60px)}
+.tag{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold-d);display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.tag::before{content:"";width:34px;height:1px;background:var(--gold-d)}
+
+/* reveal */
+[data-rv]{opacity:0;transform:translateY(34px);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1)}
+[data-rv].in{opacity:1;transform:none}
+.js [data-rv]{}
+html:not(.js) [data-rv]{opacity:1;transform:none}
+
+/* manifesto */
+.mani .big{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5.4vw,74px);line-height:1.08;font-weight:500;max-width:16ch}
+.mani .big em{font-style:italic;color:var(--gold-l)}
+.mani .big .dim{color:#C4BBA6}
+.mani .note{margin-top:50px;display:grid;grid-template-columns:1fr 1fr;gap:40px;max-width:760px}
+.mani .note p{color:var(--muted);font-size:15px}
+.mani .note b{color:var(--cream);font-weight:400}
+@media(max-width:640px){.mani .note{grid-template-columns:1fr}}
+
+/* people */
+.people{background:var(--panel);border-top:1px solid var(--line)}
+.people h2{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5vw,60px);font-weight:500;line-height:1.05;margin-bottom:16px}
+.people .lead{color:var(--muted);max-width:540px;margin-bottom:64px}
+.ppl{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+@media(max-width:900px){.ppl{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.ppl{grid-template-columns:1fr 1fr}}
+.card{position:relative}
+.card .ph{position:relative;aspect-ratio:3/4;border-radius:4px;overflow:hidden;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.card:hover .ph{transform:translateY(-8px)}
+.card .ph .mn{font-family:'Cormorant Garamond',serif;font-size:60px;color:rgba(44,42,38,.62);z-index:2}
+.card .ph::after{content:"";position:absolute;inset:0;opacity:.85;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.card .nm{margin-top:16px;font-size:15px;color:var(--cream)}
+.card .ro{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-d);margin-top:4px}
+.pplfoot{margin-top:56px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(20px,2.6vw,30px);color:var(--cream)}
+.pplfoot b{color:var(--gold-l);font-style:normal;font-weight:500}
+.pplhint{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#A79E8C;margin-top:14px}
+
+/* names */
+.names{background:var(--black)}
+.names .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
+@media(max-width:820px){.names .grid{grid-template-columns:1fr;gap:36px}}
+.nlist{border-top:1px solid var(--line)}
+.nlist .row{display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:22px 4px;border-bottom:1px solid var(--line);cursor:pointer;transition:padding-left .4s,color .4s}
+.nlist .row .n{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.4vw,40px);font-weight:500;transition:color .3s}
+.nlist .row .meta{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#A79E8C;white-space:nowrap}
+.nlist .row:hover,.nlist .row.act{padding-left:20px}
+.nlist .row:hover .n,.nlist .row.act .n{color:var(--gold-l)}
+.ndisp{position:sticky;top:120px;min-height:280px;border:1px solid var(--line);border-radius:6px;padding:44px;background:linear-gradient(160deg,var(--panel),var(--panel2));display:flex;flex-direction:column;justify-content:space-between}
+.ndisp .k{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-d)}
+.ndisp .nm{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,6vw,74px);font-weight:500;line-height:1;margin:20px 0}
+.ndisp .nm b{color:var(--gold-l);font-weight:500}
+.ndisp .mo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,2.4vw,26px);color:var(--cream);max-width:22ch}
+.ndisp .av{margin-top:26px;display:inline-flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.ndisp .dot{width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.names .foot{margin-top:44px;color:var(--muted);font-size:13px;max-width:60ch}
+
+/* principles (light) */
+.premium{background:var(--alab);color:var(--graf)}
+.premium .tag{color:var(--gold-d)}.premium .tag::before{background:var(--gold-d)}
+.premium h2{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5vw,58px);font-weight:500;line-height:1.05;max-width:18ch;margin-bottom:70px}
+.prin{display:grid;grid-template-columns:repeat(3,1fr);gap:44px}
+@media(max-width:780px){.prin{grid-template-columns:1fr}}
+.prin .p .no{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold-d);border-bottom:1px solid rgba(33,31,27,.15);padding-bottom:14px;margin-bottom:18px}
+.prin .p h3{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;margin-bottom:10px}
+.prin .p p{color:#6a6357;font-size:14px}
+
+/* cta */
+.cta{background:var(--black);text-align:center;border-top:1px solid var(--line)}
+.cta .wrap{padding-top:clamp(90px,12vw,160px);padding-bottom:60px}
+.cta h2{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,9vw,120px);font-weight:500;line-height:.98}
+.cta h2 em{font-style:italic;color:var(--gold-l)}
+.cta .mail{display:inline-block;margin-top:40px;font-size:clamp(15px,2vw,20px);letter-spacing:.05em;border-bottom:1px solid var(--gold);padding-bottom:6px;color:var(--cream)}
+.foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  padding:30px clamp(20px,5vw,60px);border-top:1px solid var(--line);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#A79E8C}
+.foot b{color:var(--muted);font-weight:400}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="vign"></div>
+<div class="cur"></div><div class="curd"></div>
+
+<div id="load">
+  <div class="mk serif"><span style="animation-delay:.05s">S</span><span style="animation-delay:.1s">T</span><span style="animation-delay:.15s">U</span><span style="animation-delay:.2s">D</span><span style="animation-delay:.25s">I</span><span style="animation-delay:.3s">O</span></div>
+  <div class="bar"><i></i></div>
+  <div class="cap">Prezentacja marki premium</div>
+</div>
+
+<nav>
+  <div class="brand">Studio<b>°</b></div>
+  <div class="links">
+    <a href="#manifest">Podejście</a>
+    <a href="#ludzie">Ludzie</a>
+    <a href="#nazwy">Nazwy</a>
+    <a href="#kontakt">Kontakt</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="glow" id="glow"></div>
+  <div class="eyebrow" data-rv>Studio kreatywne premium &nbsp;·&nbsp; Warszawa</div>
+  <h1 class="serif">
+    <span class="ln"><i style="transition-delay:.0s">Za&nbsp;każdą</i></span>
+    <span class="ln"><i style="transition-delay:.08s">marką&nbsp;stoją</i></span>
+    <span class="ln"><i style="transition-delay:.16s"><em>ludzie.</em></i></span>
+  </h1>
+  <p class="sub" data-rv>Poglądówka tego, co znaczy prezentować markę premium. Nie generator, nie szablon — rzemiosło, gust i ludzie za każdym pikselem.</p>
+  <div class="cue"><span>Przewiń</span><span class="l"></span></div>
+</header>
+
+<div class="marq" aria-hidden="true">
+  <div class="track" id="track">
+    <span>Strategia<b>—</b>Identyfikacja<b>—</b>Ruch<b>—</b>Typografia<b>—</b>Rzemiosło<b>—</b>Ludzie<b>—</b></span>
+    <span>Strategia<b>—</b>Identyfikacja<b>—</b>Ruch<b>—</b>Typografia<b>—</b>Rzemiosło<b>—</b>Ludzie<b>—</b></span>
+  </div>
+</div>
+
+<section id="manifest" class="mani">
+  <div class="wrap">
+    <div class="tag" data-rv>01 — Podejście</div>
+    <p class="big serif" data-rv>Nie <span class="dim">generujemy</span> marek.<br>Tworzymy je — <em>ręcznie</em>,<br>z ludźmi, dla ludzi.</p>
+    <div class="note">
+      <p data-rv><b>Człowiek, nie algorytm.</b> Sztuczna inteligencja jest naszym narzędziem — przyspiesza pracę, ale nie decyduje o smaku. Kierunek, gust i finalny detal zawsze należą do ludzi.</p>
+      <p data-rv><b>Premium to decyzje.</b> Przestrzeń, typografia, tempo i cisza. Premium nie krzyczy — prowadzi. Każda decyzja jest świadoma i policzona.</p>
+    </div>
+  </div>
+</section>
+
+<section id="ludzie" class="people">
+  <div class="wrap">
+    <div class="tag" data-rv>02 — W centrum</div>
+    <h2 class="serif" data-rv>Ludzie, których<br>widać w efekcie.</h2>
+    <p class="lead" data-rv>Skupiamy się na ludziach — to zespół, jego doświadczenie i wyczucie tworzą różnicę między „ładną stroną" a marką, którą się pamięta.</p>
+    <div class="ppl">
+      <div class="card" data-rv>
+        <div class="ph" style="background:linear-gradient(150deg,#E7DAC0,#C4A870)"><span class="mn serif">A</span></div>
+        <div class="nm">Twoje imię</div><div class="ro">Creative Director</div>
+      </div>
+      <div class="card" data-rv style="transition-delay:.08s">
+        <div class="ph" style="background:linear-gradient(150deg,#E4DED2,#B9AE97)"><span class="mn serif">M</span></div>
+        <div class="nm">Twoje imię</div><div class="ro">Strateg marki</div>
+      </div>
+      <div class="card" data-rv style="transition-delay:.16s">
+        <div class="ph" style="background:linear-gradient(150deg,#EAD9B4,#B98F3E)"><span class="mn serif">K</span></div>
+        <div class="nm">Twoje imię</div><div class="ro">Projektant / Art Director</div>
+      </div>
+      <div class="card" data-rv style="transition-delay:.24s">
+        <div class="ph" style="background:linear-gradient(150deg,#E3DFD4,#B0A488)"><span class="mn serif">R</span></div>
+        <div class="nm">Twoje imię</div><div class="ro">Copywriter</div>
+      </div>
+    </div>
+    <p class="pplfoot serif" data-rv>AI jest naszym <b>narzędziem</b>. Nie naszym <b>autorem</b>.</p>
+    <p class="pplhint" data-rv>Kafle na zdjęcia zespołu — miejsce na realne portrety.</p>
+  </div>
+</section>
+
+<section id="nazwy" class="names">
+  <div class="wrap">
+    <div class="tag" data-rv>03 — Kierunki nazw</div>
+    <div class="grid">
+      <div class="nlist" id="nlist" data-rv></div>
+      <div class="ndisp" id="ndisp" data-rv>
+        <div>
+          <div class="k">Robocza nazwa</div>
+          <div class="nm serif" id="d-name">Atri<b>um</b></div>
+          <div class="mo" id="d-mo">„Serce, wokół którego buduje się marka."</div>
+        </div>
+        <div class="av"><span class="dot" id="d-dot"></span><span id="d-av">domena do weryfikacji</span></div>
+      </div>
+    </div>
+    <p class="foot" data-rv>Kilka kierunków do rozmowy na spotkaniu — najedź, by zobaczyć charakter każdej nazwy. Finalny wybór potwierdza czystość znaku towarowego (klasy 35/36).</p>
+  </div>
+</section>
+
+<section class="premium">
+  <div class="wrap">
+    <div class="tag" data-rv>04 — Co znaczy premium</div>
+    <h2 class="serif" data-rv>Trzy decyzje, które oddzielają markę premium od reszty.</h2>
+    <div class="prin">
+      <div class="p" data-rv><div class="no">01</div><h3 class="serif">Powietrze</h3><p>Przestrzeń i oddech wokół treści. To, czego nie ma na ekranie, buduje wrażenie luksusu równie mocno jak to, co jest.</p></div>
+      <div class="p" data-rv style="transition-delay:.1s"><div class="no">02</div><h3 class="serif">Typografia</h3><p>Jeden dopracowany duet krojów, konsekwentna skala i rytm. Litera jest tu materiałem, nie ozdobą.</p></div>
+      <div class="p" data-rv style="transition-delay:.2s"><div class="no">03</div><h3 class="serif">Ruch</h3><p>Subtelny, celowy, jedna sygnatura. Animacja prowadzi wzrok i nadaje tempo — nigdy nie rozprasza.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="kontakt" class="cta">
+  <div class="wrap">
+    <h2 class="serif" data-rv>Porozmawiajmy<br>o <em>Waszej</em> marce.</h2>
+    <a href="#" class="mail" data-cursor data-rv>biuro@developro.pl</a>
+  </div>
+  <div class="foot">
+    <span><b>Poglądówka</b> — prezentacja marki premium</span>
+    <span>Studio° &nbsp;·&nbsp; marka DeveloPRO &nbsp;·&nbsp; Warszawa</span>
+  </div>
+</section>
+
+<script>
+document.documentElement.classList.add('js');
+var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* loader */
+function hideLoad(){var l=document.getElementById('load'); if(l) l.classList.add('done');}
+window.addEventListener('load', function(){ setTimeout(hideLoad, 900); });
+setTimeout(hideLoad, 2600); // safety
+document.getElementById('load').addEventListener('click', hideLoad);
+
+/* hero headline rise */
+window.addEventListener('load', function(){
+  document.querySelectorAll('.hero h1 .ln > i').forEach(function(el){
+    el.style.transition='transform 1s cubic-bezier(.16,1,.3,1), opacity 1s';
+    requestAnimationFrame(function(){ el.style.transform='translateY(0)'; el.style.opacity='1'; });
+  });
+});
+
+/* reveal on scroll */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+},{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('[data-rv]').forEach(function(el){ io.observe(el); });
+
+/* custom cursor + glow */
+if(matchMedia('(hover:hover) and (pointer:fine)').matches){
+  document.body.classList.add('cursor');
+  var cur=document.querySelector('.cur'), curd=document.querySelector('.curd'), glow=document.getElementById('glow');
+  var mx=innerWidth/2,my=innerHeight/2, cx=mx,cy=my, gx=mx,gy=innerHeight*0.4;
+  addEventListener('mousemove',function(e){ mx=e.clientX; my=e.clientY; curd.style.transform='translate('+(mx-2.5)+'px,'+(my-2.5)+'px)'; });
+  (function loop(){
+    cx+=(mx-cx)*.16; cy+=(my-cy)*.16;
+    cur.style.transform='translate('+(cx-17)+'px,'+(cy-17)+'px)';
+    if(glow && !reduce){ gx+=(mx-gx)*.05; gy+=(my-gy)*.05; glow.style.transform='translate('+(gx-glow.offsetWidth/2)+'px,'+(gy-glow.offsetHeight/2)+'px)'; }
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('a, [data-cursor], .nlist .row').forEach(function(el){
+    el.addEventListener('mouseenter',function(){cur.classList.add('big');});
+    el.addEventListener('mouseleave',function(){cur.classList.remove('big');});
+  });
+}
+
+/* names data */
+var NAMES=[
+  {n:'Atri<b>um</b>', plain:'Atrium', mo:'„Serce, wokół którego buduje się marka."', av:'robocza — znak do weryfikacji', free:false},
+  {n:'Resi<b>da</b>', plain:'Resida', mo:'„Prestiż, który zostaje."', av:'domena .pl / .com wolne', free:true},
+  {n:'Primu<b>ra</b>', plain:'Primura', mo:'„Pierwsza klasa w każdym detalu."', av:'domena .pl / .com wolne', free:true},
+  {n:'Est<b>veo</b>', plain:'Estveo', mo:'„Widzimy więcej."', av:'domena .pl / .com wolne', free:true},
+  {n:'Kwade<b>ra</b>', plain:'Kwadera', mo:'„Każdy detal ma znaczenie."', av:'domena .pl / .com wolne', free:true},
+  {n:'For<b>ma</b>', plain:'Forma', mo:'„Nadajemy markom formę."', av:'kierunek do rozważenia', free:false},
+  {n:'Meri<b>dian</b>', plain:'Meridian', mo:'„Wyznaczamy kierunek."', av:'kierunek do rozważenia', free:false}
+];
+var list=document.getElementById('nlist');
+var dName=document.getElementById('d-name'), dMo=document.getElementById('d-mo'), dAv=document.getElementById('d-av'), dDot=document.getElementById('d-dot');
+NAMES.forEach(function(x,i){
+  var row=document.createElement('div'); row.className='row'+(i===0?' act':'');
+  row.innerHTML='<span class="n serif">'+x.n+'</span><span class="meta">'+(x.free?'.pl wolne':'do weryfikacji')+'</span>';
+  function activate(){
+    document.querySelectorAll('.nlist .row').forEach(function(r){r.classList.remove('act');});
+    row.classList.add('act');
+    dName.innerHTML=x.n; dMo.textContent=x.mo; dAv.textContent=x.av;
+    dDot.style.background = x.free ? '#8FA07E' : 'var(--gold)';
+  }
+  row.addEventListener('mouseenter',activate);
+  row.addEventListener('click',activate);
+  list.appendChild(row);
+});
+</script>
+</body>
+</html>
