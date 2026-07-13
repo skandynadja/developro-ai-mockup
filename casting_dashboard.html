@@ -1141,31 +1141,10 @@
             <h1>developro, <span>prezentacja deweloperska</span></h1>
             <p>Automatyczny detektor kandydatów & interaktywny panel prezentacyjny HUD</p>
         </div>
-        <div class="header-status">
-            <div class="status-dot"></div>
-            <span>DETEKCJA PORTU AKTYWNA</span>
-        </div>
+
     </header>
 
-    <!-- Stats Panel -->
-    <div class="stats-container">
-        <div class="stat-card">
-            <div class="stat-number" id="stat-total">0</div>
-            <div class="stat-label">Rejestr systemowy</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="stat-experts">0</div>
-            <div class="stat-label">Eksperci ds. nieruchomości</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="stat-warszawa">0</div>
-            <div class="stat-label">Węzeł Warszawa</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="stat-lodz">0</div>
-            <div class="stat-label">Węzeł Łódź</div>
-        </div>
-    </div>
+
 
     <!-- Search Section -->
     <div class="search-container">
@@ -2212,6 +2191,7 @@
 
     function animateCountUp(elementId, targetVal) {
         const el = document.getElementById(elementId);
+        if (!el) return;
         let current = 0;
         const step = Math.ceil(targetVal / 15) || 1;
         const interval = setInterval(() => {
