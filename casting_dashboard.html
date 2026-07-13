@@ -600,6 +600,26 @@
             background: #ffffff;
         }
 
+        .expand-btn {
+            background: rgba(215, 255, 0, 0.06);
+            border: 1px solid var(--lime-color);
+            color: var(--lime-color);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: none;
+            transition: all var(--transition-speed);
+            box-shadow: 0 0 5px rgba(215, 255, 0, 0.15);
+        }
+        .expand-btn:hover {
+            background: var(--lime-color);
+            color: #0c081d;
+            box-shadow: 0 0 12px rgba(215, 255, 0, 0.5);
+            transform: scale(1.05);
+        }
+
         /* Floating Navigation Dock (Messenger Style Console) */
         .floating-dock {
             position: fixed;
@@ -1191,6 +1211,15 @@
         </div>
     </div>
     
+    <div class="dock-section">
+        <span class="dock-label">Nieruchomości</span>
+        <div class="filter-buttons" id="filter-real-estate">
+            <button class="filter-btn active" data-filter="all">Wszyscy</button>
+            <button class="filter-btn" data-filter="yes">Z dośw.</button>
+            <button class="filter-btn" data-filter="no">Bez dośw.</button>
+        </div>
+    </div>
+    
     <button class="sound-toggle" id="sound-toggle" title="Wycisz/Włącz dźwięk">🔊</button>
 </div>
 
@@ -1395,7 +1424,7 @@
 
     // Setup cursor expand on interactive tags
     function setupCursorListeners() {
-        const triggers = document.querySelectorAll('button, input, .filter-btn, .thumb-img, .candidate-card');
+        const triggers = document.querySelectorAll('button, input, .filter-btn, .thumb-img, .candidate-card, .expand-btn');
         triggers.forEach(el => {
             el.addEventListener('mouseenter', () => {
                 ring.classList.add('custom-cursor-hover');
@@ -1830,10 +1859,14 @@
       }
     ];
 
+    // Sort candidates alphabetically by name (Polish locale)
+    candidates.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+
     // Filter states
     let activeLocation = 'all';
     let activeGender = 'all';
     let activeRate = 'all';
+    let activeRealEstate = 'all';
     let searchQuery = '';
 
     const grid = document.getElementById('candidates-grid');
@@ -1859,7 +1892,14 @@
             const textToSearch = `${cand.name} ${cand.location} ${cand.experience} ${cand.tags.join(' ')}`.toLowerCase();
             const matchSearch = searchQuery === '' || textToSearch.includes(searchQuery.toLowerCase());
             
-            return matchLocation && matchGender && matchRate && matchSearch;
+            // Real Estate experience filter
+            const hasRealEstate = cand.experience.toLowerCase().includes("nieruchom") || 
+                                  cand.tags.some(tag => tag.toLowerCase().includes("nieruchom"));
+            const matchRealEstate = activeRealEstate === 'all' || 
+                                    (activeRealEstate === 'yes' && hasRealEstate) || 
+                                    (activeRealEstate === 'no' && !hasRealEstate);
+            
+            return matchLocation && matchGender && matchRate && matchSearch && matchRealEstate;
         });
 
         if (filtered.length === 0) {
@@ -1916,8 +1956,9 @@
                     <div class="card-footer">
                         <div class="rate-info">
                             <span class="rate-label">Stawka</span>
-                            <span class="rate-value">${cand.rate.length > 25 ? cand.rate.substring(0, 22) + '...' : cand.rate}</span>
+                            <span class="rate-value">${cand.rate.length > 18 ? cand.rate.substring(0, 15) + '...' : cand.rate}</span>
                         </div>
+                        <button class="expand-btn">ROZWIŃ &gt;</button>
                     </div>
                 </div>
             `;
@@ -2168,6 +2209,7 @@
     setupFilterButtons('filter-location', (val) => activeLocation = val);
     setupFilterButtons('filter-gender', (val) => activeGender = val);
     setupFilterButtons('filter-rate', (val) => activeRate = val);
+    setupFilterButtons('filter-real-estate', (val) => activeRealEstate = val);
 
     // Search input handler
     searchInput.oninput = function() {
