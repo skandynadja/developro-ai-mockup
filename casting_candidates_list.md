@@ -9,7 +9,7 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 | 1 | **Marlena Ługowska** | 32 | Warszawa | Zależna od pola eksploatacji | marlena.ugowska@gmail.com | [Wizytówka wideo](https://youtu.be/LiMpPOGed-g), [Portfolio foto](https://marlenalugowska.wordpress.com/portfolio/) |
 | 2 | **Małgorzata Okulicz** | 53 | Warszawa | 800-1500 zł (małe proj.) / od 2500 zł (duże proj.) | 507 005 903 / mokulicz@poczta.onet.pl | [Wizytówka wideo](https://youtu.be/LjhdPcqUdpc), [Dentist Studio](https://facebook.com/dentalstudioolsztyn/videos/1603847483818290) (od 2:50) |
 | 3 | **Gabriela Szymczak** | - | Warszawa | Nie podano (do ustalenia) | 535 872 940 / gszymczak99@gmail.com | [Wizytówka wideo](https://youtu.be/XdC8DyZKtRM) (zna język migowy!) |
-| 4 | **Michał Mrowca** | 53 | Łódź | Nie podano (do ustalenia) | 691 070 262 / michalmrowca@vp.pl | [Wizytówka wideo (MP4)](file://./photos/michal_mrowca_showreel.mp4) (studia nieruchomości & film) |
+| 4 | **Michał Mrowca** | 53 | Łódź | Nie podano (do ustalenia) | 691 070 262 / michalmrowca@vp.pl | [Wizytówka wideo (MP4)](./photos/michal_mrowca_showreel.mp4) (studia nieruchomości & film) |
 | 5 | **Jakub Naumiuk** | 45 | Warszawa | Nie podano (do ustalenia) | 607 079 503 / naumiukowie@wp.pl | [Wizytówka wideo](https://youtube.com/shorts/k49ldGgK9zw), [IG @jakubvintage](https://instagram.com/jakubvintage) |
 | 6 | **Aleksandra Góral** | 25 | Zgierz / Wrocław | 125-200 zł / godzina | 881 358 061 / aleksandragoral00@gmail.com | [Wizytówka wideo](https://youtu.be/UUKFtY572tI) |
 | 7 | **Leszek Żukowski** | - | Warszawa / Łódź | Nie podano (do ustalenia) | 575 874 265 / lzukowski@poczta.onet.pl | [Spot reklamowy](https://youtu.be/HHLvsaiDra4) (zawodowy aktor i lektor) |
@@ -18,6 +18,9 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 | 10 | **Justyna Klimek** | 39 | Zielona Góra / Wrocław | Nie podano (do ustalenia) | 721 426 007 / klimek_justyna@wp.pl | [Wizytówka](https://youtu.be/u4Sd3ngPpNU), [Demo](https://youtu.be/UJ7uSvggHZk) (epizodystka) |
 | 11 | **Mariusz Odwarzny** | 40 | Warszawa | 1000-1500 zł / dzień | 600 005 716 / m.odwarzny@gmail.com | [Wizytówka 1](https://youtu.be/m66dPz_L9BA), [Wizytówka 2](https://youtu.be/zqcUZQ0VIcM) (lektor, aktor) |
 | 12 | **Sylwia Sokołowska** | 30 | Warszawa | Nie podano (do ustalenia) | 881 490 051 / ssokolovvska@gmail.com | [Wizytówka](https://youtu.be/AT2XNLdEIJA), [Demo](https://youtu.be/LOs2MUbiknI) (aktorka) |
+| 13 | **Dawid Kula** | 28 | Gdynia | Nie podano (do ustalenia) | 514 929 858 / davidkula@wp.pl | [Wizytówka](https://youtu.be/2kR1HOeF8Rc), [IG @dawidmaciejkula](https://www.instagram.com/dawidmaciejkula/) |
+| 14 | **Bartłomiej Skowron** | 38 | Łódź | Nie podano (do ustalenia) | 502 432 646 / bskonsultant@gmail.com | [Wizytówka wideo](https://www.youtube.com/shorts/iyhGPZosw78), [FilmPolski](https://filmpolski.pl/fp/index.php?osoba=11200011) |
+| 15 | **Artur Pawlicki** | 42 | Warszawa | Nie podano (do ustalenia) | 696 920 244 / pawlicki1983@gmail.com | [Wizytówka wideo](https://youtu.be/URLyE-i9Zyg) |
 
 ---
 
@@ -34,7 +37,7 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
   - [Portfolio Fotograficzne](https://marlenalugowska.wordpress.com/portfolio/)
   - [Filmmakers.eu Profile](https://www.filmmakers.eu/pl/actors/marlena-lugowska)
 * **Zdjęcia**:
-
+  
   ![Marlena Ługowska - Zdjęcie 1](./photos/marlena_lugowska_1.jpg)
   
   ![Marlena Ługowska - Zdjęcie 2](./photos/marlena_lugowska_2.jpg)
@@ -90,7 +93,7 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 * **Stawka**: Do ustalenia
 * **Doświadczenie**: Absolwent Ekonomii na UŁ (spec. Inwestycje i Nieruchomości), studia podyplomowe Rynek Nieruchomości oraz Produkcja Filmowa i TV. Współpracuje ze Szkołą Filmową w Łodzi. Koproducent wielokrotnie nagradzanego filmu krótkometrażowego "Play" (Canal+, TVP Kultura, Kino Polska).
 * **Materiały**:
-  - [Pobierz/Odtwórz Wizytówkę wideo (MP4)](file://./photos/michal_mrowca_showreel.mp4)
+  - [Pobierz/Odtwórz Wizytówkę wideo (MP4)](./photos/michal_mrowca_showreel.mp4)
 * **Zdjęcia**:
 
   ![Michał Mrowca - Zdjęcie 1](./photos/michal_mrowca_1.jpg)
@@ -179,13 +182,10 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 * **Lokalizacja**: Warszawa
 * **Kontakt**: 663 704 572 | kamilaafeltowicz@gmail.com
 * **Stawka**: Do uzgodnienia
-* **Doświadczenie**: Absolwentka Warszawskiej Szkoły Filmowej. Aktorka z doświadczeniem scenicznym, reklamowym i UGC.
+* **Doświadczenie**: Aktorka po Warszawskiej Szkole Filmowej. Doświadczenie w reklamach i materiałach UGC.
 * **Materiały**:
   - [Wizytówka wideo (YouTube)](https://youtu.be/HHumke4em3c?is=eJk1u9B17Nn5wCSW)
   - [Demo reklamowe (YouTube)](https://youtu.be/PvX95QHzpBo)
-  - [UGC Reel (Instagram)](https://www.instagram.com/reel/DGXuRZouSMJ/)
-  - [UGC Facebook 1](https://www.facebook.com/share/v/1GGcdGLDD8/)
-  - [UGC Facebook 2](https://www.facebook.com/share/v/16853QU1mS/)
 * **Zdjęcia**:
 
   ![Kamila Afeltowicz - Zdjęcie 1](./photos/kamila_afeltowicz_1.jpg)
@@ -203,12 +203,10 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 * **Lokalizacja**: Zielona Góra / Wrocław
 * **Kontakt**: 721 426 007 | klimek_justyna@wp.pl
 * **Stawka**: Do uzgodnienia
-* **Doświadczenie**: Studentka aktorstwa w Lubuskiej Szkole Aktorskiej. Epizodystka w wielu polskich serialach telewizyjnych (Lombard, Pierwsza Miłość, Sprawiedliwi). Doświadczenie wybiegowe i modelkowe.
+* **Doświadczenie**: Studentka Lubuskiej Szkoły Aktorskiej. Epizody w serialach telewizyjnych, doświadczenie modelingowe.
 * **Materiały**:
-  - [Wizytówka wideo (YouTube)](https://youtu.be/u4Sd3ngPpNU?is=FwnuWIuTggaSZy0Q)
-  - [Demo aktorskie (YouTube)](https://youtu.be/UJ7uSvggHZk?is=J9ThzvCeIguU1h1Q)
-  - [Etiuda wideo sitcom (YouTube)](https://youtu.be/aH1j4jYhj0Q)
-  - [Serial wideo (YouTube)](https://youtu.be/YBBzDTsLaHY?is=Q51ggyYSyL5yA6gi)
+  - [Wizytówka wideo (YouTube)](https://youtu.be/u4Sd3ngPpNU)
+  - [Demo aktorskie (YouTube)](https://youtu.be/UJ7uSvggHZk)
 * **Zdjęcia**:
 
   ![Justyna Klimek - Zdjęcie 1](./photos/justyna_klimek_1.jpg)
@@ -218,10 +216,6 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
   ![Justyna Klimek - Zdjęcie 3](./photos/justyna_klimek_3.jpg)
   
   ![Justyna Klimek - Zdjęcie 4](./photos/justyna_klimek_4.jpg)
-  
-  ![Justyna Klimek - Zdjęcie 5](./photos/justyna_klimek_5.jpg)
-  
-  ![Justyna Klimek - Zdjęcie 6](./photos/justyna_klimek_6.jpg)
 
 ---
 
@@ -230,13 +224,10 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 * **Lokalizacja**: Warszawa
 * **Kontakt**: 600 005 716 | m.odwarzny@gmail.com
 * **Stawka**: 1000 - 1500 zł brutto za dzień zdjęciowy (do negocjacji)
-* **Doświadczenie**: Aktor zawodowy (absolwent Studia Teatralnego Baza), konferansjer, wokalista i reporter (Gameta TV, TV Answear, Rolnik na Czasie). Posiada bogate doświadczenie lektorskie i w prezentacjach z prompterem.
+* **Doświadczenie**: Zawodowy aktor (Studio Teatralne Baza), konferansjer, wokalista i reporter (Gameta TV, TV Answear). Praca z prompterem.
 * **Materiały**:
-  - [Świeża Wizytówka wideo (YouTube)](https://youtu.be/m66dPz_L9BA?is=odD8Z_zExD7DuZqa)
-  - [Najnowsza produkcja (YouTube)](https://youtu.be/zqcUZQ0VIcM?si=oHmKgxMuT6WXm8cg)
-  - [Prompter Realizacja (YouTube)](https://youtu.be/3cOEV8uD3dw?si=HFEDY9KlCc_5Yn4J)
-  - [PUNKT DLA PRZYRODY 1 (YouTube)](https://youtu.be/gkeRxut4IMo?si=EMHpFcMK5Pfw4tM8)
-  - [PUNKT DLA PRZYRODY 2 (YouTube)](https://youtu.be/YGrQ3WqgylM?si=k6YM1VpVTker7D13)
+  - [Wizytówka wideo (YouTube)](https://youtu.be/m66dPz_L9BA)
+  - [Najnowsza produkcja (YouTube)](https://youtu.be/zqcUZQ0VIcM)
 * **Zdjęcia**:
 
   ![Mariusz Odwarzny - Portret](./photos/mariusz_odwarzny_1.jpg)
@@ -247,12 +238,69 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 * **Wiek**: 30 lat
 * **Lokalizacja**: Warszawa
 * **Kontakt**: 881 490 051 | ssokolovvska@gmail.com
-* **Stawka**: Do uzgodnienia (w zależności od praw eksploatacji)
-* **Doświadczenie**: Zawodowa aktorka z dużym doświadczeniem przed kamerą, świetną dykcją, prezencją i kulturą osobistą.
+* **Stawka**: Do uzgodnienia
+* **Doświadczenie**: Zawodowa aktorka z dużym doświadczeniem przed kamerą, świetną dykcją i prezencją.
 * **Materiały**:
-  - [Wizytówka wideo (YouTube)](https://youtu.be/AT2XNLdEIJA?is=q3eq7rNNDgblo0IP)
-  - [Przemówienie do kamery (YouTube)](https://youtu.be/LOs2MUbiknI?is=DOzm665CYF_ZscBn)
-  - [Reklama z udziałem Sylwii (Vimeo)](https://vimeo.com/795337304?share=copy)
+  - [Wizytówka wideo (YouTube)](https://youtu.be/AT2XNLdEIJA)
+  - [Przemówienie do kamery (YouTube)](https://youtu.be/LOs2MUbiknI)
 * **Zdjęcia**:
 
   ![Sylwia Sokołowska - Portret](./photos/sylwia_sokolowska_1.jpg)
+
+---
+
+### 13. Dawid Kula
+* **Wiek**: 28 lat
+* **Lokalizacja**: Gdynia
+* **Kontakt**: 514 929 858 | davidkula@wp.pl
+* **Stawka**: Do ustalenia
+* **Doświadczenie**: Dyplomowany aktor z doświadczeniem teatralnym oraz w reklamach i produkcjach filmowych. Wzrost: 180 cm.
+* **Materiały**:
+  - [Wizytówka wideo (YouTube)](https://youtu.be/2kR1HOeF8Rc?si=CO9LMM041Aos2fVT)
+  - Instagram: [@dawidmaciejkula](https://www.instagram.com/dawidmaciejkula/)
+  - Facebook: [DAWID MACIEJ KULA](https://www.facebook.com/dawidmaciejkula/)
+* **Zdjęcia**:
+
+  ![Dawid Kula - Portret](./photos/dawid_kula_1.jpeg)
+  
+  ![Dawid Kula - Sylwetka](./photos/dawid_kula_2.jpeg)
+
+---
+
+### 14. Bartłomiej Skowron
+* **Wiek**: 38 lat
+* **Lokalizacja**: Łódź
+* **Kontakt**: 502 432 646 | bskonsultant@gmail.com
+* **Stawka**: Do ustalenia
+* **Doświadczenie**: Wzrost: 176 cm. Doświadczenie fabularne, role filmowe.
+* **Materiały**:
+  - [Wizytówka wideo (YouTube Shorts)](https://www.youtube.com/shorts/iyhGPZosw78)
+  - FilmPolski: [Bartłomiej Skowron](https://filmpolski.pl/fp/index.php?osoba=11200011)
+  - Filmweb: [Bartłomiej Skowron](https://www.filmweb.pl/person/Bart%C5%82omiej+Skowron-2973719)
+* **Zdjęcia**:
+
+  ![Bartłomiej Skowron - Zdjęcie 1](./photos/bartlomiej_skowron_1.jpg)
+  
+  ![Bartłomiej Skowron - Zdjęcie 2](./photos/bartlomiej_skowron_2.jpg)
+  
+  ![Bartłomiej Skowron - Zdjęcie 3](./photos/bartlomiej_skowron_3.jpg)
+
+---
+
+### 15. Artur Pawlicki
+* **Wiek**: 42 lata
+* **Lokalizacja**: Warszawa
+* **Kontakt**: 696 920 244 | pawlicki1983@gmail.com
+* **Stawka**: Do ustalenia
+* **Doświadczenie**: Wzrost: 177 cm. Doświadczenie przed kamerą.
+* **Materiały**:
+  - [Wizytówka wideo (YouTube)](https://youtu.be/URLyE-i9Zyg)
+* **Zdjęcia**:
+
+  ![Artur Pawlicki - Portret](./photos/artur_pawlicki_1.jpg)
+  
+  ![Artur Pawlicki - Sylwetka 1](./photos/artur_pawlicki_2.jpeg)
+  
+  ![Artur Pawlicki - Sylwetka 2](./photos/artur_pawlicki_3.jpeg)
+  
+  ![Artur Pawlicki - Portret 2](./photos/artur_pawlicki_4.jpeg)
