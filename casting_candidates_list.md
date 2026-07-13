@@ -12,15 +12,13 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 | 4 | **Michał Mrowca** | 53 | Łódź | Nie podano (do ustalenia) | 691 070 262 / michalmrowca@vp.pl | [Wizytówka wideo (MP4)](./photos/michal_mrowca_showreel.mp4) (studia nieruchomości & film) |
 | 5 | **Jakub Naumiuk** | 45 | Warszawa | Nie podano (do ustalenia) | 607 079 503 / naumiukowie@wp.pl | [Wizytówka wideo](https://youtube.com/shorts/k49ldGgK9zw), [IG @jakubvintage](https://instagram.com/jakubvintage) |
 | 6 | **Aleksandra Góral** | 25 | Zgierz / Wrocław | 125-200 zł / godzina | 881 358 061 / aleksandragoral00@gmail.com | [Wizytówka wideo](https://youtu.be/UUKFtY572tI) |
-| 7 | **Leszek Żukowski** | - | Warszawa / Łódź | Nie podano (do ustalenia) | 575 874 265 / lzukowski@poczta.onet.pl | [Spot reklamowy](https://youtu.be/HHLvsaiDra4) (zawodowy aktor i lektor) |
-| 8 | **Adrian Pikała** | 33 | Warszawa | 250 zł/h (lub 1000 zł/dzień) | 792 252 512 / adrianpikala@gmail.com | [Wizytówka 1](https://youtu.be/Jnfap7H_fkU), [Wizytówka 2](https://youtu.be/kdKLS75ST64) (epizodysta) |
-| 9 | **Kamila Afeltowicz** | 33 | Warszawa | Nie podano (do ustalenia) | 663 704 572 / kamilaafeltowicz@gmail.com | [Wizytówka](https://youtu.be/HHumke4em3c), [Demo](https://youtu.be/PvX95QHzpBo) (aktorka) |
-| 10 | **Justyna Klimek** | 39 | Zielona Góra / Wrocław | Nie podano (do ustalenia) | 721 426 007 / klimek_justyna@wp.pl | [Wizytówka](https://youtu.be/u4Sd3ngPpNU), [Demo](https://youtu.be/UJ7uSvggHZk) (epizodystka) |
-| 11 | **Mariusz Odwarzny** | 40 | Warszawa | 1000-1500 zł / dzień | 600 005 716 / m.odwarzny@gmail.com | [Wizytówka 1](https://youtu.be/m66dPz_L9BA), [Wizytówka 2](https://youtu.be/zqcUZQ0VIcM) (lektor, aktor) |
-| 12 | **Sylwia Sokołowska** | 30 | Warszawa | Nie podano (do ustalenia) | 881 490 051 / ssokolovvska@gmail.com | [Wizytówka](https://youtu.be/AT2XNLdEIJA), [Demo](https://youtu.be/LOs2MUbiknI) (aktorka) |
-| 13 | **Dawid Kula** | 28 | Gdynia | Nie podano (do ustalenia) | 514 929 858 / davidkula@wp.pl | [Wizytówka](https://youtu.be/2kR1HOeF8Rc), [IG @dawidmaciejkula](https://www.instagram.com/dawidmaciejkula/) |
-| 14 | **Bartłomiej Skowron** | 38 | Łódź | Nie podano (do ustalenia) | 502 432 646 / bskonsultant@gmail.com | [Wizytówka wideo](https://www.youtube.com/shorts/iyhGPZosw78), [FilmPolski](https://filmpolski.pl/fp/index.php?osoba=11200011) |
-| 15 | **Artur Pawlicki** | 42 | Warszawa | Nie podano (do ustalenia) | 696 920 244 / pawlicki1983@gmail.com | [Wizytówka wideo](https://youtu.be/URLyE-i9Zyg) |
+| 7 | **Adrian Pikała** | 33 | Warszawa | 250 zł/h (lub 1000 zł/dzień) | 792 252 512 / adrianpikala@gmail.com | [Wizytówka 1](https://youtu.be/Jnfap7H_fkU), [Wizytówka 2](https://youtu.be/kdKLS75ST64) (epizodysta) |
+| 8 | **Kamila Afeltowicz** | 33 | Warszawa | Nie podano (do ustalenia) | 663 704 572 / kamilaafeltowicz@gmail.com | [Wizytówka](https://youtu.be/HHumke4em3c), [Demo](https://youtu.be/PvX95QHzpBo) (aktorka) |
+| 9 | **Justyna Klimek** | 39 | Zielona Góra / Wrocław | Nie podano (do ustalenia) | 721 426 007 / klimek_justyna@wp.pl | [Wizytówka](https://youtu.be/u4Sd3ngPpNU), [Demo](https://youtu.be/UJ7uSvggHZk) (epizodystka) |
+| 10 | **Mariusz Odwarzny** | 40 | Warszawa | 1000-1500 zł / dzień | 600 005 716 / m.odwarzny@gmail.com | [Wizytówka 1](https://youtu.be/m66dPz_L9BA), [Wizytówka 2](https://youtu.be/zqcUZQ0VIcM) (lektor, aktor) |
+| 11 | **Sylwia Sokołowska** | 30 | Warszawa | Nie podano (do ustalenia) | 881 490 051 / ssokolovvska@gmail.com | [Wizytówka](https://youtu.be/AT2XNLdEIJA), [Demo](https://youtu.be/LOs2MUbiknI) (aktorka) |
+| 12 | **Dawid Kula** | 28 | Gdynia | Nie podano (do ustalenia) | 514 929 858 / davidkula@wp.pl | [Wizytówka](https://youtu.be/2kR1HOeF8Rc), [IG @dawidmaciejkula](https://www.instagram.com/dawidmaciejkula/) |
+| 13 | **Bartłomiej Skowron** | 38 | Łódź | Nie podano (do ustalenia) | 502 432 646 / bskonsultant@gmail.com | [Wizytówka wideo](https://www.youtube.com/shorts/iyhGPZosw78), [FilmPolski](https://filmpolski.pl/fp/index.php?osoba=11200011) |
 
 ---
 
@@ -140,23 +138,7 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 
 ---
 
-### 7. Leszek Żukowski
-* **Wiek**: Nie podano
-* **Lokalizacja**: Warszawa / Łódź
-* **Kontakt**: 575 874 265 | lzukowski@poczta.onet.pl
-* **Stawka**: Do ustalenia
-* **Doświadczenie**: Zawodowy aktor i lektor. Duże doświadczenie przed kamerą.
-* **Materiały**:
-  - [Główna rola w reklamie (YouTube)](https://youtu.be/HHLvsaiDra4?is=PdkJh-DJi4UUpobt)
-* **Zdjęcia**:
-
-  ![Leszek Żukowski - Zdjęcie 1](./photos/leszek_zukowski_1.jpg)
-  
-  ![Leszek Żukowski - Zdjęcie 2](./photos/leszek_zukowski_2.jpg)
-
----
-
-### 8. Adrian Pikała
+### 7. Adrian Pikała
 * **Wiek**: 33 lata
 * **Lokalizacja**: Warszawa
 * **Kontakt**: 792 252 512 | adrianpikala@gmail.com
@@ -177,7 +159,7 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 
 ---
 
-### 9. Kamila Afeltowicz
+### 8. Kamila Afeltowicz
 * **Wiek**: 33 lata
 * **Lokalizacja**: Warszawa
 * **Kontakt**: 663 704 572 | kamilaafeltowicz@gmail.com
@@ -198,7 +180,7 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 
 ---
 
-### 10. Justyna Klimek
+### 9. Justyna Klimek
 * **Wiek**: 39 lat
 * **Lokalizacja**: Zielona Góra / Wrocław
 * **Kontakt**: 721 426 007 | klimek_justyna@wp.pl
@@ -219,7 +201,7 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 
 ---
 
-### 11. Mariusz Odwarzny
+### 10. Mariusz Odwarzny
 * **Wiek**: 40 lat
 * **Lokalizacja**: Warszawa
 * **Kontakt**: 600 005 716 | m.odwarzny@gmail.com
@@ -234,7 +216,7 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 
 ---
 
-### 12. Sylwia Sokołowska
+### 11. Sylwia Sokołowska
 * **Wiek**: 30 lat
 * **Lokalizacja**: Warszawa
 * **Kontakt**: 881 490 051 | ssokolovvska@gmail.com
@@ -249,7 +231,7 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 
 ---
 
-### 13. Dawid Kula
+### 12. Dawid Kula
 * **Wiek**: 28 lat
 * **Lokalizacja**: Gdynia
 * **Kontakt**: 514 929 858 | davidkula@wp.pl
@@ -267,7 +249,7 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 
 ---
 
-### 14. Bartłomiej Skowron
+### 13. Bartłomiej Skowron
 * **Wiek**: 38 lat
 * **Lokalizacja**: Łódź
 * **Kontakt**: 502 432 646 | bskonsultant@gmail.com
@@ -287,20 +269,3 @@ Poniżej znajduje się zbiorcza lista wszystkich osób chętnych do udziału w n
 
 ---
 
-### 15. Artur Pawlicki
-* **Wiek**: 42 lata
-* **Lokalizacja**: Warszawa
-* **Kontakt**: 696 920 244 | pawlicki1983@gmail.com
-* **Stawka**: Do ustalenia
-* **Doświadczenie**: Wzrost: 177 cm. Doświadczenie przed kamerą.
-* **Materiały**:
-  - [Wizytówka wideo (YouTube)](https://youtu.be/URLyE-i9Zyg)
-* **Zdjęcia**:
-
-  ![Artur Pawlicki - Portret](./photos/artur_pawlicki_1.jpg)
-  
-  ![Artur Pawlicki - Sylwetka 1](./photos/artur_pawlicki_2.jpeg)
-  
-  ![Artur Pawlicki - Sylwetka 2](./photos/artur_pawlicki_3.jpeg)
-  
-  ![Artur Pawlicki - Portret 2](./photos/artur_pawlicki_4.jpeg)
